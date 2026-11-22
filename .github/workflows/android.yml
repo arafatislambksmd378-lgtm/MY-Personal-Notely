@@ -94,7 +94,9 @@ jobs:
       - name: Publish evidence to ci-artifacts
         if: always()
         continue-on-error: true
-        run: bash scripts/android/publish-evidence.sh artifacts android
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/android/publish-evidence.sh artifacts build/android
 
   emulator:
     name: Emulator smoke test and screenshots
@@ -142,4 +144,6 @@ jobs:
       - name: Publish screenshots to ci-artifacts
         if: always()
         continue-on-error: true
-        run: bash scripts/android/publish-evidence.sh artifacts/screenshots screenshots
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/android/publish-evidence.sh artifacts/screenshots build/screenshots
