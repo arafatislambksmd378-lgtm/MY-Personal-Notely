@@ -37,6 +37,7 @@ import {
 } from '@/features/editor/InsertContentSheets';
 import { ShareExportSheet } from '@/features/editor/ShareExportSheet';
 import { TagsSheet } from '@/features/editor/TagsSheet';
+import { ScanSheet } from '@/features/editor/ScanSheet';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
@@ -93,7 +94,8 @@ type SheetName =
   | 'equation'
   | 'chart'
   | 'voice'
-  | 'bookmarkLabel';
+  | 'bookmarkLabel'
+  | 'scan';
 
 const DEFAULT_SELECTION: EditorSelectionInfo = {
   bold: false,
@@ -344,6 +346,9 @@ export default function NoteEditorScreen() {
         case 'bookmark':
           openSheet('bookmarkLabel');
           break;
+        case 'scan':
+          openSheet('scan');
+          break;
         default:
           break;
       }
@@ -543,6 +548,12 @@ export default function NoteEditorScreen() {
       />
 
       <TagsSheet visible={sheet === 'tags'} onClose={closeSheet} documentId={doc.id} />
+
+      <ScanSheet
+        visible={sheet === 'scan'}
+        onClose={closeSheet}
+        onInsert={(scannedHtml) => send({ type: 'insertHTML', html: scannedHtml })}
+      />
 
       <TextStyleSheet
         visible={sheet === 'style'}

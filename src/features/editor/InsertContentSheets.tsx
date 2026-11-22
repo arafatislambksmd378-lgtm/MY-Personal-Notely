@@ -437,9 +437,9 @@ export function VoiceSheet({
                   setSession(null);
                   return;
                 }
-                const next = startDictation(setTranscript, (message) => setError(message));
+                const next = startDictation((text) => setTranscript(text), (message) => setError(message));
                 if (next) setSession(next);
-                else setError('Dictation could not start in this browser.');
+                else setError('Dictation could not start on this device.');
               }}
               style={{ flex: 1 }}
             />

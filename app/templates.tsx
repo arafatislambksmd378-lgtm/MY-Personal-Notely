@@ -17,6 +17,7 @@ import { useColors } from '@/store/useSettingsStore';
 import { useLibraryStore } from '@/store/useLibraryStore';
 import { NOTE_TEMPLATES, type NoteTemplate } from '@/features/templates/catalog';
 import { pickAndImport } from '@/services/import';
+import { ScanSheet } from '@/features/editor/ScanSheet';
 import { createDocument } from '@/db/repositories/documents';
 import { toast } from '@/store/useToastStore';
 import { logEvent } from '@/db/repositories/events';
@@ -28,6 +29,7 @@ export default function TemplatesScreen() {
   const refresh = useLibraryStore((state) => state.refresh);
   const createNote = useLibraryStore((state) => state.createNote);
   const [importing, setImporting] = useState(false);
+  const [scanOpen, setScanOpen] = useState(false);
 
   const use = useCallback(
     async (template: NoteTemplate) => {
@@ -89,6 +91,19 @@ export default function TemplatesScreen() {
           </AppText>
         </Card>
 
+        <Card style={{ gap: spacing.sm }}>
+          <View style={styles.row}>
+            <IconTile name="scan-outline" accent="teal" />
+            <View style={styles.texts}>
+              <AppText variant="bodyStrong">Scan a document</AppText>
+              <AppText variant="caption" tone="muted">
+                Photograph pages, recognise their text on-device and keep both.
+              </AppText>
+            </View>
+          </View>
+          <Button label="Open scanner" icon="camera-outline" variant="soft" onPress={() => setScanOpen(true)} fullWidth />
+        </Card>
+
         <AppText variant="overline" tone="muted">
           STARTER NOTES
         </AppText>
@@ -128,6 +143,23 @@ export default function TemplatesScreen() {
           </View>
         ) : null}
       </ScrollView>
+
+      <ScanSheet
+        visible={scanOpen}
+        onClose={() => setScanOpen(false)}
+        onInsert={(scannedHtml) => {
+          void (async () => {
+            try {
+              const doc = await createDocument({ title: 'Scanned document', contentHtml: scannedHtml });
+              await refresh();
+              setScanOpen(false);
+              router.push({ pathname: '/note/[id]', params: { id: doc.id } });
+            } catch (error) {
+              toast.error(error instanceof Error ? error.message : 'Could not create the note');
+            }
+          })();
+        }}
+      />
     </Screen>
   );
 }

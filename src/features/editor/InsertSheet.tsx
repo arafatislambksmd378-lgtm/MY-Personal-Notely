@@ -22,9 +22,11 @@ export type InsertTool =
   | 'symbols'
   | 'equation'
   | 'contents'
-  | 'bookmark';
+  | 'bookmark'
+  | 'scan';
 
 const TOOLS: { key: InsertTool; label: string; subtitle: string; icon: IoniconName; accent: AccentName }[] = [
+  { key: 'scan', label: 'Scan', subtitle: 'Camera + OCR', icon: 'scan-outline', accent: 'teal' },
   { key: 'table', label: 'Table', subtitle: 'Rows & columns', icon: 'grid-outline', accent: 'purple' },
   { key: 'drawing', label: 'Drawing', subtitle: 'Sketch & ink', icon: 'brush-outline', accent: 'blue' },
   { key: 'chart', label: 'Chart', subtitle: 'Graphs from data', icon: 'bar-chart-outline', accent: 'green' },
