@@ -1,15 +1,14 @@
 /**
  * "Style" and "Aa" sheet: block style, font size, text colour and highlight.
  */
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { BottomSheet } from '@/components/BottomSheet';
 import { AppText } from '@/components/AppText';
-import { Pressable } from 'react-native';
 import { useColors } from '@/store/useSettingsStore';
 import { radii, spacing } from '@/design/tokens';
 import type { BlockStyle } from '@/types/editor';
 
-const BLOCKS: Array<{ key: BlockStyle; label: string; size: number; weight: '500' | '600' | '700' }> = [
+const BLOCKS: { key: BlockStyle; label: string; size: number; weight: '500' | '600' | '700' }[] = [
   { key: 'paragraph', label: 'Paragraph', size: 15, weight: '500' },
   { key: 'h1', label: 'Heading 1', size: 24, weight: '700' },
   { key: 'h2', label: 'Heading 2', size: 20, weight: '700' },
@@ -18,7 +17,7 @@ const BLOCKS: Array<{ key: BlockStyle; label: string; size: number; weight: '500
   { key: 'code', label: 'Code block', size: 14, weight: '500' },
 ];
 
-const SIZES: Array<{ label: string; value: string }> = [
+const SIZES: { label: string; value: string }[] = [
   { label: 'Small', value: '13px' },
   { label: 'Normal', value: '16px' },
   { label: 'Large', value: '19px' },

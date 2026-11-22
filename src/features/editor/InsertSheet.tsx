@@ -24,7 +24,7 @@ export type InsertTool =
   | 'contents'
   | 'bookmark';
 
-const TOOLS: Array<{ key: InsertTool; label: string; subtitle: string; icon: IoniconName; accent: AccentName }> = [
+const TOOLS: { key: InsertTool; label: string; subtitle: string; icon: IoniconName; accent: AccentName }[] = [
   { key: 'table', label: 'Table', subtitle: 'Rows & columns', icon: 'grid-outline', accent: 'purple' },
   { key: 'drawing', label: 'Drawing', subtitle: 'Sketch & ink', icon: 'brush-outline', accent: 'blue' },
   { key: 'chart', label: 'Chart', subtitle: 'Graphs from data', icon: 'bar-chart-outline', accent: 'green' },

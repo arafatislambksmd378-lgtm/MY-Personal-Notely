@@ -114,3 +114,10 @@ export async function countVersions(documentId: string): Promise<number> {
   );
   return Number(row?.count ?? 0);
 }
+
+/** Total number of stored versions across every document (diagnostics). */
+export async function countVersionsAll(): Promise<number> {
+  const db = await getDatabase();
+  const row = await db.get<{ count: number }>('SELECT COUNT(*) AS count FROM document_versions');
+  return row?.count ?? 0;
+}

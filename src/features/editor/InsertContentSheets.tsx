@@ -2,7 +2,7 @@
  * Insert tools: table, link, footnote, symbols, equation, chart and voice input.
  */
 import { useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheet } from '@/components/BottomSheet';
 import { AppText } from '@/components/AppText';
@@ -204,7 +204,7 @@ export function FootnoteSheet({
 
 /* ---------------------------------- symbols --------------------------------- */
 
-const SYMBOL_GROUPS: Array<{ title: string; symbols: string[] }> = [
+const SYMBOL_GROUPS: { title: string; symbols: string[] }[] = [
   { title: 'Math', symbols: ['±', '×', '÷', '≠', '≈', '≤', '≥', '√', '∞', '∑', '∏', '∫', '∂', '∆', 'π', 'µ'] },
   { title: 'Arrows', symbols: ['←', '→', '↑', '↓', '↔', '⇒', '⇔', '↗', '↘', '⟶', '⇢', '↺'] },
   { title: 'Punctuation', symbols: ['—', '–', '…', '•', '·', '†', '‡', '§', '¶', '©', '®', '™'] },

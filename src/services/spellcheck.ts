@@ -116,9 +116,9 @@ export function editDistance(a: string, b: string): number {
 export function suggestCorrectionsScored(
   word: string,
   limit = 3,
-): Array<{ candidate: string; distance: number }> {
+): { candidate: string; distance: number }[] {
   const lower = word.toLowerCase();
-  const scored: Array<{ candidate: string; distance: number }> = [];
+  const scored: { candidate: string; distance: number }[] = [];
   const maxDistance = lower.length <= 4 ? 1 : lower.length <= 7 ? 2 : 3;
   for (const candidate of DICTIONARY) {
     if (Math.abs(candidate.length - lower.length) > maxDistance) continue;
@@ -153,11 +153,11 @@ function isKnownWord(word: string): boolean {
   return false;
 }
 
-const GRAMMAR_RULES: Array<{
+const GRAMMAR_RULES: {
   pattern: RegExp;
   message: string;
   suggest: (match: RegExpExecArray) => string[];
-}> = [
+}[] = [
   {
     pattern: /\b(\w+)\s+\1\b/gi,
     message: 'Repeated word',

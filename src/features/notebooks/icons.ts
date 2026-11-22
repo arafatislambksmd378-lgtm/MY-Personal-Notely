@@ -4,7 +4,7 @@
  */
 import type { IoniconName } from '@/components/IconTile';
 
-export const NOTEBOOK_ICONS: Array<{ key: string; icon: IoniconName; label: string }> = [
+export const NOTEBOOK_ICONS: { key: string; icon: IoniconName; label: string }[] = [
   { key: 'book', icon: 'book', label: 'Book' },
   { key: 'briefcase', icon: 'briefcase', label: 'Work' },
   { key: 'bulb', icon: 'bulb', label: 'Ideas' },

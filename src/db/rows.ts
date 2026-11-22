@@ -194,7 +194,7 @@ export function mapTag(row: TagRow): Tag {
 }
 
 /** Settings are stored as one JSON document under the `app` key plus scalars. */
-export function readSettingsRows(rows: Array<{ key: string; value: string }>): Partial<UserSettings> {
+export function readSettingsRows(rows: { key: string; value: string }[]): Partial<UserSettings> {
   const merged: Record<string, unknown> = {};
   for (const row of rows) {
     merged[row.key] = safeJsonParse<unknown>(row.value, null);

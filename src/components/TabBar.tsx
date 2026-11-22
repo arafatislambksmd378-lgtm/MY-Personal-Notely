@@ -19,7 +19,7 @@ const ICONS: Record<string, { active: keyof typeof Ionicons.glyphMap; inactive: 
  * build while still being fully typed at the call site.
  */
 export interface NotelyTabBarProps {
-  state: { index: number; routes: Array<{ key: string; name: string }> };
+  state: { index: number; routes: { key: string; name: string }[] };
   navigation: {
     emit: (event: { type: 'tabPress'; target: string; canPreventDefault: true }) => { defaultPrevented: boolean };
     navigate: (name: string, params?: Record<string, unknown>) => void;

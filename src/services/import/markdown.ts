@@ -22,7 +22,7 @@ function inline(text: string): string {
 export function markdownToHtml(markdown: string): string {
   const lines = markdown.replace(/\r\n/g, '\n').split('\n');
   const output: string[] = [];
-  let listStack: Array<{ ordered: boolean }> = [];
+  let listStack: { ordered: boolean }[] = [];
   let inCodeFence = false;
   let codeBuffer: string[] = [];
   let paragraph: string[] = [];

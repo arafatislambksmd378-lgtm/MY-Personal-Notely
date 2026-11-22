@@ -24,7 +24,11 @@ export function useAutosave<T>({ save, delayMs = 1200, enabled = true, onError }
   const [status, setStatus] = useState<SaveStatus>('idle');
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
   const saveRef = useRef(save);
-  saveRef.current = save;
+
+  // Keep the latest callback reachable from timers without re-arming them.
+  useEffect(() => {
+    saveRef.current = save;
+  }, [save]);
 
   const runSave = useCallback(async () => {
     if (!payloadRef.current || savingRef.current) return;

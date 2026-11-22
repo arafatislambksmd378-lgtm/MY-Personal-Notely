@@ -14,14 +14,13 @@ import { useFonts } from 'expo-font';
 
 import { notelyFonts } from '@/design/fonts';
 import { useColors, useSettingsStore } from '@/store/useSettingsStore';
-import { getDatabase } from '@/db';
+import { getDatabase , flushDatabase } from '@/db';
 import { logEvent } from '@/db/repositories/events';
 import { useLibraryStore } from '@/store/useLibraryStore';
 import { ToastHost } from '@/components/ToastHost';
 import { LockScreen } from '@/features/security/LockScreen';
 import { useLockStore } from '@/store/useLockStore';
 import { StartupError } from '@/features/system/StartupError';
-import { flushDatabase } from '@/db';
 
 void SplashScreen.preventAutoHideAsync().catch(() => undefined);
 

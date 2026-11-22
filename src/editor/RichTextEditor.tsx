@@ -78,7 +78,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
 
   return (
     <View style={[styles.container, style]} testID={testID}>
-      {/* eslint-disable-next-line react/no-unknown-property */}
+      { }
       <iframe
         ref={frameRef}
         title="Notely document editor"

@@ -37,12 +37,12 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
 
   useEffect(() => {
     dispatch({ type: 'set-theme', dark });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [dark]);
 
   useEffect(() => {
     dispatch({ type: 'set-page-setup', pageSetup: JSON.stringify(pageSetup), fontScale });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [fontScale, pageSetup]);
 
   const handleMessage = (event: WebViewMessageEvent) => {

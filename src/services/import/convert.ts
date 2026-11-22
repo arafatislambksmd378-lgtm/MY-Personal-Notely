@@ -10,7 +10,7 @@ import { escapeHtml, htmlToPlainText } from '@/utils/text';
 
 export type ImportFormat = 'md' | 'txt' | 'html' | 'docx' | 'odt';
 
-export const IMPORT_FORMAT_INFO: Array<{ format: ImportFormat; label: string; extensions: string[] }> = [
+export const IMPORT_FORMAT_INFO: { format: ImportFormat; label: string; extensions: string[] }[] = [
   { format: 'md', label: 'Markdown', extensions: ['.md', '.markdown'] },
   { format: 'txt', label: 'Plain text', extensions: ['.txt'] },
   { format: 'html', label: 'Web page', extensions: ['.html', '.htm'] },

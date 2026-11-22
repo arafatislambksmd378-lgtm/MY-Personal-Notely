@@ -2,7 +2,7 @@
  * Page setup: orientation, paper size, margins, page colour, header, footer,
  * page numbers and line spacing. Every change is applied live to the editor.
  */
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheet } from '@/components/BottomSheet';
 import { AppText } from '@/components/AppText';

@@ -11,7 +11,7 @@ interface ScreenProps {
   padded?: boolean;
   contentStyle?: ViewStyle;
   footer?: ReactNode;
-  edges?: Array<'top' | 'bottom' | 'left' | 'right'>;
+  edges?: ('top' | 'bottom' | 'left' | 'right')[];
   testID?: string;
 }
 

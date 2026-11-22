@@ -13,7 +13,7 @@ import { readImageInfo, fitImage } from '@/utils/imageMeta';
 const EMU_PER_PIXEL = 9525;
 
 interface DocxContext {
-  images: Array<{ name: string; base64: string; rid: string; width: number; height: number }>;
+  images: { name: string; base64: string; rid: string; width: number; height: number }[];
   relationships: string[];
 }
 

@@ -1,6 +1,6 @@
 /** Notebooks screen: every notebook with its live note count. */
 import { useCallback, useState } from 'react';
-import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, View , Pressable } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -10,7 +10,6 @@ import { IconTile } from '@/components/IconTile';
 import { CountBadge } from '@/components/CountBadge';
 import { EmptyState } from '@/components/EmptyState';
 import { PromptDialog } from '@/components/PromptDialog';
-import { Pressable } from 'react-native';
 import { useLibraryStore } from '@/store/useLibraryStore';
 import { useColors } from '@/store/useSettingsStore';
 import { notebookIconName } from '@/features/notebooks/icons';

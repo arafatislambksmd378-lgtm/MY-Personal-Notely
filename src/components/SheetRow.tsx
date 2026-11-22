@@ -4,7 +4,7 @@
  * value, chevron.
  */
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import type { ReactNode } from 'react';
 import { AppText } from './AppText';
 import { IconTile, type IoniconName } from './IconTile';

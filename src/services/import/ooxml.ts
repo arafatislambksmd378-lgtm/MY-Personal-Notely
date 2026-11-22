@@ -65,7 +65,7 @@ export async function docxToHtml(bytes: Uint8Array): Promise<string> {
   const paragraphRegex = /<p(?:\s[^>]*)?>([\s\S]*?)<\/p>|<tbl>([\s\S]*?)<\/tbl>/g;
   let match: RegExpExecArray | null;
   while ((match = paragraphRegex.exec(body))) {
-    const [full, paragraphContent, tableContent] = match;
+    const [, paragraphContent, tableContent] = match;
 
     if (tableContent) {
       closeList();

@@ -12,13 +12,16 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "expo lint",
-    "build:web": "expo export --platform web",
-    "preview": "node scripts/serve-web.mjs"
+    "build:web": "npm run vendor:web && expo export --platform web",
+    "preview": "node scripts/serve-web.mjs",
+    "vendor:web": "node scripts/vendor-web-assets.mjs",
+    "verify": "npm run typecheck && npm run lint && npm test"
   },
   "dependencies": {
     "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
     "@expo/metro-runtime": "~58.0.17",
     "@expo/vector-icons": "^15.1.1",
+    "babel-preset-expo": "^54.0.12",
     "expo": "~58.0.26",
     "expo-clipboard": "~58.0.4",
     "expo-constants": "~58.0.16",
@@ -56,11 +59,13 @@
     "zustand": "^5.1.0"
   },
   "devDependencies": {
+    "@types/jsdom": "^30.0.0",
     "@types/node": "^26.6.6",
     "@types/react": "~19.3.0",
     "@types/sql.js": "^1.16.0",
     "eslint": "^9.39.5",
     "eslint-config-expo": "^58.0.4",
+    "jsdom": "^31.0.1",
     "sql.js": "^1.17.0",
     "typescript": "~6.0.3",
     "vitest": "^5.1.1"

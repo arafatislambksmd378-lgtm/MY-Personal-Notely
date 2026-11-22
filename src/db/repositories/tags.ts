@@ -60,3 +60,12 @@ export async function listDocumentTags(documentId: string): Promise<Tag[]> {
   );
   return rows.map(mapTag);
 }
+
+/** How many documents reference each tag id. */
+export async function getTagUsage(): Promise<Record<string, number>> {
+  const db = await getDatabase();
+  const rows = await db.all<{ tag_id: string; count: number }>(
+    'SELECT tag_id, COUNT(*) AS count FROM document_tags GROUP BY tag_id',
+  );
+  return Object.fromEntries(rows.map((row) => [row.tag_id, row.count]));
+}

@@ -125,7 +125,7 @@ const SEED_NOTES: SeedNote[] = [
   },
 ];
 
-const SEED_NOTEBOOKS: Array<{ name: string; color: string; icon: string }> = [
+const SEED_NOTEBOOKS: { name: string; color: string; icon: string }[] = [
   { name: 'Personal', color: 'purple', icon: 'book' },
   { name: 'Work', color: 'blue', icon: 'briefcase' },
   { name: 'Ideas', color: 'amber', icon: 'bulb' },

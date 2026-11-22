@@ -41,3 +41,12 @@ export async function totalMediaBytes(): Promise<number> {
   );
   return Number(row?.total ?? 0);
 }
+
+/** Count and total size of stored media (diagnostics). */
+export async function getMediaUsage(): Promise<{ count: number; bytes: number }> {
+  const db = await getDatabase();
+  const row = await db.get<{ count: number; bytes: number | null }>(
+    'SELECT COUNT(*) AS count, COALESCE(SUM(byte_size), 0) AS bytes FROM media_assets',
+  );
+  return { count: row?.count ?? 0, bytes: row?.bytes ?? 0 };
+}

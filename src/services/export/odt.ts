@@ -8,21 +8,10 @@ import { escapeXml, parseHtml, tableRows, type HtmlElement, type HtmlNode } from
 import { readImageInfo, fitImage } from '@/utils/imageMeta';
 
 interface OdtContext {
-  images: Array<{ name: string; base64: string; width: number; height: number }>;
+  images: { name: string; base64: string; width: number; height: number }[];
   styles: Set<string>;
 }
 
-function spanXml(html: string, text: string, context: OdtContext): string {
-  const styleParts: string[] = [];
-  if (/<(b|strong)>/i.test(html)) styleParts.push('bold');
-  if (/<(i|em)>/i.test(html)) styleParts.push('italic');
-  if (/<u>/i.test(html)) styleParts.push('underline');
-  if (/<(s|strike|del)>/i.test(html)) styleParts.push('strike');
-  const styleName = styleParts.length ? `T${styleParts.join('')}` : null;
-  if (styleName) context.styles.add(styleName);
-  const escaped = escapeXml(text).replace(/\n/g, '<text:line-break/>');
-  return styleName ? `<text:span text:style-name="${styleName}">${escaped}</text:span>` : escaped;
-}
 
 function inlineXml(node: HtmlNode, context: OdtContext, inheritedMarks = ''): string {
   if (node.type === 'text') {
