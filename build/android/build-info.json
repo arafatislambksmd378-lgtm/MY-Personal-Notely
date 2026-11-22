@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-11-22T09:56:15.959Z",
+  "commit": "4e74b697254b191939d4974dbf0ecbd8b1ceb4c7",
+  "runId": "45007949363",
+  "runUrl": "https://github.com/arafatislambksmd378-lgtm/MY-Personal-Notely/actions/runs/45007949363",
+  "signing": "debug keystore (Expo template default)",
+  "java": "openjdk version \"17.0.21\" 2026-10-20",
+  "node": "v22.23.5",
+  "expo": "~58.0.26",
+  "sdk": null,
+  "artifacts": [
+    {
+      "kind": "APK",
+      "file": "/home/runner/work/MY-Personal-Notely/MY-Personal-Notely/artifacts/android/notely-app-release.apk",
+      "bytes": 147371352,
+      "sha256": "64f97b33a7d1d15c3a4ee5315e88f8bfb7b1628987733a057e06fefded53c01e"
+    },
+    {
+      "kind": "AAB",
+      "file": "/home/runner/work/MY-Personal-Notely/MY-Personal-Notely/artifacts/android/notely-app-release.aab",
+      "bytes": 90449364,
+      "sha256": "79544f90ba7dc33858cf737168104fd82857b09a9bf4b8ed90bb5e1eee34679c"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+# generated android tree
+android/.gitignore
+android/app/build.gradle
+android/app/debug.keystore
+android/app/proguard-rules.pro
+android/build.gradle
+android/gradle.properties
+android/gradle/wrapper/gradle-wrapper.jar
+android/gradle/wrapper/gradle-wrapper.properties
+android/gradlew
+android/gradlew.bat
+android/settings.gradle
