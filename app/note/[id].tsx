@@ -36,6 +36,7 @@ import {
   VoiceSheet,
 } from '@/features/editor/InsertContentSheets';
 import { ShareExportSheet } from '@/features/editor/ShareExportSheet';
+import { TagsSheet } from '@/features/editor/TagsSheet';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
@@ -51,7 +52,9 @@ import {
   saveDocumentContent,
   trashDocument,
   touchOpened,
+  toggleFavorite,
   togglePinned,
+  toggleArchived,
 } from '@/db/repositories/documents';
 import { createVersion } from '@/db/repositories/versions';
 import { addBookmark } from '@/db/repositories/bookmarks';
@@ -80,6 +83,9 @@ type SheetName =
   | 'bookmarks'
   | 'move'
   | 'share'
+  | 'tags'
+  | 'favorite'
+  | 'archive'
   | 'table'
   | 'link'
   | 'footnote'
@@ -389,6 +395,28 @@ export default function NoteEditorScreen() {
         case 'pin':
           void onTogglePin();
           break;
+        case 'tags':
+          openSheet('tags');
+          break;
+        case 'favorite':
+          void (async () => {
+            if (!id) return;
+            const next = await toggleFavorite(id);
+            setDoc((current) => (current ? { ...current, isFavorite: next } : current));
+            await refreshLibrary();
+            toast.success(next ? 'Added to favourites' : 'Removed from favourites');
+          })();
+          break;
+        case 'archive':
+          void (async () => {
+            if (!id) return;
+            const next = await toggleArchived(id);
+            setDoc((current) => (current ? { ...current, isArchived: next } : current));
+            await refreshLibrary();
+            toast.success(next ? 'Note archived' : 'Note moved back to your library');
+            if (next) router.back();
+          })();
+          break;
         case 'delete':
           setConfirmDelete(true);
           break;
@@ -511,7 +539,10 @@ export default function NoteEditorScreen() {
         onCardColorChange={(color) => void changeCardColor(color)}
         onSelect={handleNoteOption}
         isPinned={doc.isPinned}
+        isFavorite={doc.isFavorite}
       />
+
+      <TagsSheet visible={sheet === 'tags'} onClose={closeSheet} documentId={doc.id} />
 
       <TextStyleSheet
         visible={sheet === 'style'}

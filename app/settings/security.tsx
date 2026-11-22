@@ -3,7 +3,7 @@
  * "lock now" action. The PIN itself lives in secure storage, never in SQLite.
  */
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import { Screen } from '@/components/Screen';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -148,6 +148,16 @@ export default function SecuritySettings() {
           }}
         />
       </Card>
+
+      {Platform.OS === 'web' ? (
+        <Card style={{ marginTop: spacing.lg }}>
+          <AppText variant="label" tone="muted">
+            Browser build: there is no system keychain in a web page, so the PIN hash is kept in this browser&apos;s
+            local storage. It protects against casual access on a shared screen, not against someone with access to
+            the browser profile. The Android and iOS builds use the platform keystore.
+          </AppText>
+        </Card>
+      ) : null}
 
       <View style={styles.note}>
         <AppText variant="label" tone="muted">

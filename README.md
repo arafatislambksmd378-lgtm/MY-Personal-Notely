@@ -33,7 +33,7 @@ npm install          # install dependencies
 npm start            # Expo dev server (press a / i / w)
 npm run android      # native Android build
 npm run web          # web build in the browser
-npm test             # 98 tests: schema, repositories, editor, export, import, backup
+npm test             # 102 tests: schema, repositories, editor, export, import, backup
 npm run typecheck    # strict TypeScript, no emit
 npm run lint         # ESLint (Expo config)
 ```

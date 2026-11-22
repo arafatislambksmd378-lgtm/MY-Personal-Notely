@@ -3,7 +3,7 @@
 **Branch:** `arena/99d02ee7-my-personal-notely`
 **Stack:** Expo SDK 58 · React Native 0.81 · Expo Router 6 · TypeScript 5 (strict) · SQLite (expo-sqlite / sql.js)
 **Size:** 128 TypeScript files, ~16,200 lines of app code, ~1,250 lines of tests
-**Verification:** `tsc --noEmit` clean · ESLint 0 errors (35 known warnings) · **98 tests passing** · static web build exports successfully and serves over HTTP
+**Verification:** `tsc --noEmit` clean · ESLint 0 errors (35 known warnings) · **102 tests passing** · static web build exports successfully and serves over HTTP
 
 ---
 
@@ -18,7 +18,7 @@ from one codebase. The work is organised in layers with no upward dependencies:
 | Repositories (documents, notebooks, tags, versions, comments, bookmarks, media, settings, events, shares) | done | `src/db/repositories/` |
 | Design system (tokens, typography, 19 primitives) | done | `src/design/`, `src/components/` |
 | Rich-text editor shell + WebView/iframe bridges | done | `src/editor/` |
-| Editor screen with 14 sheets/actions | done | `app/note/[id].tsx`, `src/features/editor/` |
+| Editor screen with 16 sheets/actions (incl. tags, favourites, archive) | done | `app/note/[id].tsx`, `src/features/editor/` |
 | Home, notebooks, notebook detail | done | `app/(tabs)`, `app/notebook/[id].tsx` |
 | Settings root + 7 sub-screens | done | `app/(tabs)/settings.tsx`, `app/settings/` |
 | Search, collections, templates/import | done | `app/search.tsx`, `app/collection/[kind].tsx`, `app/templates.tsx` |
@@ -27,7 +27,7 @@ from one codebase. The work is organised in layers with no upward dependencies:
 | Import (5 formats) | done | `src/services/import/` |
 | Backup / restore (JSON + ZIP) | done | `src/services/backup.ts` |
 | Diagnostics, spellcheck, diff, charts, media | done | `src/services/`, `src/utils/` |
-| Tests | 98 passing | `tests/` |
+| Tests | 102 passing | `tests/` |
 | CI, docs, web preview server | done | `.github/workflows/ci.yml`, `docs/`, `scripts/` |
 
 ## 2. Editor
@@ -72,7 +72,7 @@ creates a note. Markdown → HTML → Markdown and DOCX → HTML round trips are
 ```
 npx tsc --noEmit          → 0 errors
 npx eslint .              → 0 errors, 35 warnings
-npx vitest run            → 7 files, 98 tests passed
+npx vitest run            → 8 files, 102 tests passed
 npx expo export -p web    → dist/ with 20 route bundles
 node scripts/serve-web.mjs → /, /search, /templates, /settings/*, /sql.js, /sql-wasm.wasm all 200
 ```
@@ -87,6 +87,7 @@ Test coverage by area:
 | `export.test.ts` | 14 | every format, OOXML/ODF package structure, images, file names, unsupported formats |
 | `import.test.ts` | 12 | detection, Markdown, sanitisation, DOCX/ODT round trips, corrupt files |
 | `backup.test.ts` | 7 | counts, PIN exclusion, merge/replace, malformed payloads, ZIP round trip |
+| `store.test.ts` | 4 | library and settings stores hydrate from SQLite |
 | `utils.test.ts` | 26 | text metrics, sanitizer, diff, charts, spellcheck, image metadata, parser |
 
 The web bundle was served and every route plus both WebAssembly assets returned 200 with the
@@ -120,7 +121,7 @@ These are the gaps between "shipped" and "perfect", stated plainly:
 ```bash
 npm install
 npm run android     # or npm run ios / npm run web
-npm test            # 98 tests
+npm test            # 102 tests
 npm run verify      # typecheck + lint + tests
 npm run build:web && npm run preview
 ```

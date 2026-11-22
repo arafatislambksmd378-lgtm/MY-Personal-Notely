@@ -6,7 +6,7 @@ npm run test:watch   # watch mode
 npx vitest run tests/editor.test.ts
 ```
 
-98 tests run in three environments:
+102 tests run in three environments:
 
 | Environment | Setup | Used for |
 | --- | --- | --- |

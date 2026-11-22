@@ -19,6 +19,9 @@ export type NoteOption =
   | 'comments'
   | 'bookmarks'
   | 'move'
+  | 'tags'
+  | 'favorite'
+  | 'archive'
   | 'share'
   | 'duplicate'
   | 'pin'
@@ -31,6 +34,7 @@ interface NoteOptionsSheetProps {
   onCardColorChange: (color: AccentName) => void;
   onSelect: (option: NoteOption) => void;
   isPinned: boolean;
+  isFavorite?: boolean;
 }
 
 export function NoteOptionsSheet({
@@ -40,6 +44,7 @@ export function NoteOptionsSheet({
   onCardColorChange,
   onSelect,
   isPinned,
+  isFavorite = false,
 }: NoteOptionsSheetProps) {
   return (
     <BottomSheet visible={visible} onClose={onClose} title="Note options" testID="note-options-sheet">
@@ -62,6 +67,14 @@ export function NoteOptionsSheet({
         <SheetRow label="Comments" icon="chatbubble-outline" accent="blue" onPress={() => onSelect('comments')} />
         <SheetRow label="Bookmarks" icon="bookmark-outline" accent="purple" onPress={() => onSelect('bookmarks')} />
         <SheetRow label="Move to notebook" icon="folder-open-outline" accent="green" onPress={() => onSelect('move')} />
+        <SheetRow label="Tags" icon="pricetags-outline" accent="amber" onPress={() => onSelect('tags')} />
+        <SheetRow
+          label={isFavorite ? 'Remove from favourites' : 'Add to favourites'}
+          icon="star-outline"
+          accent="amber"
+          onPress={() => onSelect('favorite')}
+        />
+        <SheetRow label="Archive note" icon="archive-outline" accent="teal" onPress={() => onSelect('archive')} />
         <SheetRow label="Share & export" icon="share-social-outline" accent="purple" onPress={() => onSelect('share')} />
         <SheetRow label="Make a copy" icon="copy-outline" accent="amber" onPress={() => onSelect('duplicate')} />
         <SheetRow
