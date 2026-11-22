@@ -1,0 +1,72 @@
+name: Verify cloud sync (live)
+
+# Integration check of the Supabase sync contract against a real project.
+# Enable it by adding three repository secrets:
+#   NOTELY_SUPABASE_URL, NOTELY_SUPABASE_ANON_KEY, NOTELY_SYNC_TOKEN
+# The token must match the one baked into notely_authorized() in
+# supabase/schema.sql (see docs/ARCHITECTURE.md → Cloud sync).
+#
+# Until those secrets exist the job stays green but skips the network test, so
+# a missing credential is never reported as a passing sync check.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['**']
+    paths:
+      - 'supabase/schema.sql'
+      - 'src/services/supabase.ts'
+      - 'tests/live-sync.test.ts'
+      - '.github/workflows/verify-sync.yml'
+
+concurrency:
+  group: verify-sync-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  live-sync:
+    name: Push/pull against live Supabase
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Check credentials
+        id: creds
+        env:
+          URL_VALUE: ${{ secrets.NOTELY_SUPABASE_URL }}
+          ANON_KEY: ${{ secrets.NOTELY_SUPABASE_ANON_KEY }}
+          SYNC_TOKEN: ${{ secrets.NOTELY_SYNC_TOKEN }}
+        run: |
+          if [ -n "$URL_VALUE" ] && [ -n "$ANON_KEY" ] && [ -n "$SYNC_TOKEN" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            echo "Credentials present (project host hidden)."
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Live sync skipped — add NOTELY_SUPABASE_URL, NOTELY_SUPABASE_ANON_KEY and NOTELY_SYNC_TOKEN secrets to run it."
+          fi
+
+      - name: Run live sync integration test
+        if: steps.creds.outputs.present == 'true'
+        env:
+          NOTELY_LIVE_SYNC: '1'
+          NOTELY_SUPABASE_URL: ${{ secrets.NOTELY_SUPABASE_URL }}
+          NOTELY_SUPABASE_ANON_KEY: ${{ secrets.NOTELY_SUPABASE_ANON_KEY }}
+          NOTELY_SYNC_TOKEN: ${{ secrets.NOTELY_SYNC_TOKEN }}
+        run: npx vitest run tests/live-sync.test.ts --reporter=verbose 2>&1 | tee live-sync.log
+
+      - name: Upload live sync log
+        if: steps.creds.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-sync-log
+          path: live-sync.log
+          retention-days: 30
