@@ -49,7 +49,10 @@ jobs:
         run: npm ci --no-audit --no-fund
 
       - name: Generate native Android project
-        run: npx expo prebuild --platform android --no-install
+        run: |
+          npx expo prebuild --platform android --no-install 2>&1 | tee artifacts/android/prebuild.log
+          { echo "# generated android tree"; find android -maxdepth 3 -type f | sort | head -200; } \
+            | tee artifacts/android/android-tree.txt
 
       - name: Configure signing
         run: node scripts/android/configure-signing.mjs
@@ -88,16 +91,10 @@ jobs:
             artifacts/android/*.apk artifacts/android/*.aab || true
           gh release view "$TAG" --json assets,url > artifacts/android/release.json || true
 
-      - name: Publish build report to ci-artifacts
+      - name: Publish evidence to ci-artifacts
         if: always()
         continue-on-error: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          node scripts/android/publish-artifacts.mjs \
-            "android/build-info.md=artifacts/android/build-info.md" \
-            "android/build-info.json=artifacts/android/build-info.json" \
-            "android/gradle.log=artifacts/android/gradle.log"
+        run: bash scripts/android/publish-evidence.sh artifacts android
 
   emulator:
     name: Emulator smoke test and screenshots
@@ -145,18 +142,4 @@ jobs:
       - name: Publish screenshots to ci-artifacts
         if: always()
         continue-on-error: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          node scripts/android/publish-artifacts.mjs \
-            "android/screenshots/01-home.png=artifacts/screenshots/01-home.png" \
-            "android/screenshots/02-editor.png=artifacts/screenshots/02-editor.png" \
-            "android/screenshots/03-notebooks.png=artifacts/screenshots/03-notebooks.png" \
-            "android/screenshots/04-settings.png=artifacts/screenshots/04-settings.png" \
-            "android/screenshots/05-backup.png=artifacts/screenshots/05-backup.png" \
-            "android/screenshots/06-templates.png=artifacts/screenshots/06-templates.png" \
-            "android/screenshots/07-note-open.png=artifacts/screenshots/07-note-open.png" \
-            "android/screenshots/08-note-options.png=artifacts/screenshots/08-note-options.png" \
-            "android/screenshots/09-insert-sheet.png=artifacts/screenshots/09-insert-sheet.png" \
-            "android/logcat.txt=artifacts/screenshots/logcat.txt" \
-            "android/launch.txt=artifacts/screenshots/launch.txt"
+        run: bash scripts/android/publish-evidence.sh artifacts/screenshots screenshots

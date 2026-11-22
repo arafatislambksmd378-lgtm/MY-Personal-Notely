@@ -239,7 +239,9 @@ export async function saveDocumentContent(id: string, update: ContentUpdate): Pr
 
   await db.run(
     `UPDATE documents SET title = ?, content_html = ?, plain_text = ?, excerpt = ?,
-      word_count = ?, char_count = ?, reading_minutes = ?, updated_at = ? WHERE id = ?`,
+      word_count = ?, char_count = ?, reading_minutes = ?, updated_at = ?,
+      sync_state = CASE WHEN sync_state = 'local' THEN 'local' ELSE 'pending' END
+      WHERE id = ?`,
     [title, update.html, plain, excerpt, words, chars, reading, now, id],
   );
 
@@ -280,7 +282,9 @@ export async function patchDocument(id: string, patch: DocumentPatch): Promise<v
 
   await db.run(
     `UPDATE documents SET title = ?, notebook_id = ?, card_color = ?, is_favorite = ?, is_pinned = ?,
-      is_archived = ?, page_setup_json = ?, updated_at = ? WHERE id = ?`,
+      is_archived = ?, page_setup_json = ?, updated_at = ?,
+      sync_state = CASE WHEN sync_state = 'local' THEN 'local' ELSE 'pending' END
+      WHERE id = ?`,
     [title, notebookId, cardColor, favorite, pinned, archived, JSON.stringify(setup), now, id],
   );
 }

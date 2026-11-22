@@ -171,4 +171,15 @@ export const migrations: Migration[] = [
       CREATE INDEX IF NOT EXISTS idx_notebooks_sort ON notebooks(is_archived, sort_order);
     `,
   },
+  {
+    version: 5,
+    name: 'sync_meta',
+    up: `
+      CREATE TABLE IF NOT EXISTS sync_meta (
+        key TEXT PRIMARY KEY NOT NULL,
+        value TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+      );
+    `,
+  },
 ];
