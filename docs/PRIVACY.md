@@ -13,6 +13,7 @@ Notely is designed so that privacy is a property of the architecture, not a prom
 | Settings | same database (key/value) | No |
 | PIN hash and salt | Expo SecureStore (Keychain / Keystore) | No |
 | Event log (diagnostics) | same database | No — only if you share the report |
+| Optional cloud copy of notes | your Supabase project (only if you connect sync) | Yes, to that project only |
 
 ## What is never collected
 
@@ -23,10 +24,14 @@ Notely is designed so that privacy is a property of the architecture, not a prom
 
 ## Network
 
-The app makes **no** network requests in its default configuration. The only network code
-path is the optional cloud sync screen, and it runs only after you provide a Supabase URL
-and anon key via environment variables. That screen performs a single reachability check
-when you press *Test backend connection* — nothing else is sent.
+The app makes **no** network requests until you connect cloud sync. When you do, requests go
+only to the Supabase project URL you entered: note content is uploaded to *your* project, and
+nothing is sent anywhere else. There is no telemetry endpoint, no crash reporting service and
+no third-party analytics.
+
+Camera, photo picker, microphone and speech recognition are handled by the operating system.
+ML Kit text recognition and Android speech recognition run on-device; images and audio are
+never uploaded by Notely.
 
 ## Backup files
 

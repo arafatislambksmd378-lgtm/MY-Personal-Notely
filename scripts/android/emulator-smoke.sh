@@ -61,10 +61,43 @@ tap_text "Templates" && shot 06-templates
 # Editor deeper tour: open a seeded note from the home screen.
 tap_text "Home" && sleep 0.5
 tap_text "Welcome" && sleep 2 && shot 07-note-open
-tap_text "Note options" && shot 08-note-options
+tap_text "Note options" && sleep 1 && shot 08-note-options
 $ADB shell input keyevent 4 && sleep 0.5
-tap_text "Insert" && shot 09-insert-sheet
+tap_text "Insert" && sleep 1 && shot 09-insert-sheet
 $ADB shell input keyevent 4 && sleep 0.5
+
+# --- Exercise the editor: type into the note body, wait for autosave ---------
+tap_text "Welcome" && sleep 2
+$ADB shell input tap 540 900
+$ADB shell input text "Android smoke test line"
+sleep 3
+shot 10-typed
+$ADB shell input keyevent 4 && sleep 2
+
+# --- Persistence: kill the process, relaunch, check the note still exists ----
+$ADB shell am force-stop com.notely.app
+sleep 2
+$ADB shell am start -W -n com.notely.app/.MainActivity >/dev/null
+sleep 8
+shot 11-after-restart
+tap_text "Welcome" && sleep 3 && shot 12-reopened-note
+$ADB shell input keyevent 4 && sleep 1
+
+# --- Native sharing: export the note as Markdown -----------------------------
+tap_text "Welcome" && sleep 2
+tap_text "Note options" && sleep 1
+tap_text "Share & export" && sleep 1 && shot 13-share-export
+tap_text "Markdown" && sleep 3 && shot 14-android-share-sheet
+$ADB shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | head -3 > "$OUT_DIR/foreground.txt" || true
+$ADB shell input keyevent 4 && sleep 1
+$ADB shell input keyevent 4 && sleep 1
+
+# --- Search at the library level --------------------------------------------
+tap_text "Search" && sleep 1 && shot 15-search
+$ADB shell input text "welcome"
+sleep 2
+shot 16-search-results
+$ADB shell input keyevent 4 && sleep 1
 
 $ADB logcat -d > "$OUT_DIR/logcat.txt" || true
 if grep -q "FATAL EXCEPTION" "$OUT_DIR/logcat.txt"; then

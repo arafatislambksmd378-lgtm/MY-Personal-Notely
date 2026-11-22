@@ -37,6 +37,8 @@ The editor is a real page, not a plain text box:
 | Version history | Note options | snapshots with diffs; restore any of them |
 | Comments | header bubble | threads anchored to the selected text |
 | Bookmarks | Note options | named anchors you can jump back to |
+| Scan | `+` bar | photograph pages, recognise text on-device, insert image + text |
+| Voice typing | `+` bar | dictate into the note with the device speech service |
 
 Saving is automatic. The header shows *Saving…*, *Unsaved changes*, *Saved · 14:02* or a
 failure state. Press **Ctrl/⌘ + S** to force a save. If a save fails, the edits stay in the
@@ -81,6 +83,29 @@ Note options → **Share & export**:
 
 PDF uses the system print service — choose “Save as PDF” when prompted. Every other format
 creates a real file and opens the share sheet.
+
+## Cloud sync (optional)
+
+Nothing leaves the phone unless you connect it. To sync between devices:
+
+1. Create a Supabase project and run `supabase/schema.sql` in its SQL editor (replace the
+   token in the policy with a long random string).
+2. In Notely: Settings → Cloud sync → **Connect a Supabase project**, enter the project URL,
+   anon key, the same sync token and a workspace id.
+3. Tap **Test connection**, then **Sync now**. Use the same workspace id on your other
+   devices.
+
+The screen always shows the real outcome: notes pushed, notes pulled, conflicts resolved and
+any error text from the server. Conflicts keep the newer edit and store the replaced local
+draft in version history. Turn on background sync to run a cycle whenever the app opens.
+
+## Scanning and dictation
+
+- **Scan pages** (editor `+` → Scan): capture up to ten pages; each page is stored as an
+  image and, when ML Kit is available, its recognised text follows the image.
+  Settings → Templates → Scanner starts a new note from a scan.
+- **Voice typing** (editor `+` → Voice): grant the microphone once, speak, and the
+  transcript is inserted. On web, Chrome/Edge provide the recognition instead.
 
 ## Settings
 

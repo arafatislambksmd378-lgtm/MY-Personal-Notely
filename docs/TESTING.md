@@ -6,7 +6,7 @@ npm run test:watch   # watch mode
 npx vitest run tests/editor.test.ts
 ```
 
-102 tests run in three environments:
+137 tests run in three environments:
 
 | Environment | Setup | Used for |
 | --- | --- | --- |
@@ -35,6 +35,20 @@ covers sanitisation, table insertion and clamping, table of contents, footnotes,
 anchors, find/replace counts, and live page setup — without a browser or a device. jsdom
 does not implement `document.execCommand`, so formatting commands that depend on it
 (bold/italic/alignment) are exercised on device instead.
+
+## Sync tests
+
+`tests/sync.test.ts` runs the real engine against an in-memory PostgREST stand-in: it
+asserts request URLs and headers, watermark pull behaviour, batch pushes, last-write-wins
+conflicts (including the version snapshot), tombstone handling, repo-created notebooks and
+failure reporting. `createSyncClient` is additionally tested against a mocked `fetch` for
+HTTP 404/401 and network errors.
+
+## Scan and voice tests
+
+`tests/scan.test.ts` mocks `expo-mlkit-ocr` and `expo-speech-recognition` to exercise the
+capture loop, page limits, OCR success/unsupported/crash paths, HTML generation (including
+escaping) and both dictation implementations, including denied permissions and error codes.
 
 ## Export tests
 

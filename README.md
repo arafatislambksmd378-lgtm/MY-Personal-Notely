@@ -23,8 +23,17 @@ pinning, archive, trash with restore, and instant offline search over title, bod
 **Keep safe** — autosave with a visible save state, version history with diffs and restore,
 PIN + biometric app lock whose hash never touches the database, and full local backups.
 
+**Scan & speak** — photograph pages, recognise their text on-device with ML Kit and keep
+both image and text; dictate into any note with Android speech recognition (browser speech
+API on web).
+
 **Share** — export to PDF, DOCX, ODT, RTF, HTML, Markdown and TXT with headings, tables,
-lists, links, emphasis and embedded images intact; import DOCX, ODT, Markdown, HTML and TXT.
+lists, links, emphasis and embedded images intact; import DOCX, ODT, Markdown, HTML and TXT
+(including the images inside DOCX files).
+
+**Sync (optional)** — push and pull notes with a Supabase project you own: incremental
+watermark sync, last-write-wins conflicts that keep the overwritten draft in version
+history, and tombstones so deletions propagate. Off unless you connect a project.
 
 ## Getting started
 
@@ -33,7 +42,7 @@ npm install          # install dependencies
 npm start            # Expo dev server (press a / i / w)
 npm run android      # native Android build
 npm run web          # web build in the browser
-npm test             # 102 tests: schema, repositories, editor, export, import, backup
+npm test             # 137 tests: schema, repositories, editor, export, import, backup, sync, scan
 npm run typecheck    # strict TypeScript, no emit
 npm run lint         # ESLint (Expo config)
 ```
@@ -59,6 +68,7 @@ src/services/           Export, import, backup, diagnostics, media, security, sp
 src/components/         Design-system primitives (Button, Card, Sheet, SheetRow, …)
 src/design/             Tokens: colours, spacing, radii, typography, shadows
 tests/                  Vitest suites (node + jsdom)
+supabase/schema.sql     Table + RLS policy for optional cloud sync
 docs/                   Architecture, user guide, privacy, testing notes
 ```
 

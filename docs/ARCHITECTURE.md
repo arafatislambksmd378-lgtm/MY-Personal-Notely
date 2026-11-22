@@ -90,6 +90,39 @@ Expo document picker; `convert.ts` stays platform-free so it is unit-tested in N
 File delivery is split by platform (`files.ts` / `files.native.ts` / `files.web.ts`) so
 Metro picks the right implementation and Node tests never import native modules.
 
+## Cloud sync (optional)
+
+`src/services/supabase.ts` is a deliberately small PostgREST client (ping, upsert, pull,
+delete) and `src/services/sync.ts` is the engine:
+
+1. **Pull** rows with `updated_at > last_pull_at`, apply last-write-wins per document.
+   When a remote row is newer *and* the local copy had unsynced edits, the local copy is
+   snapshotted into version history before being replaced — a conflict never loses text.
+2. **Push** documents whose `sync_state` is `local`/`pending` in batches of 50, then mark
+   them `synced` and advance the watermark past the timestamps we just uploaded.
+3. **Tombstones**: deletions travel as `deleted_at`, so an offline device trashes the note
+   instead of resurrecting it.
+
+Watermarks, the device id and the last result live in `sync_meta` (migration 5). The
+project URL and workspace id are stored there too; the anon key and sync token live in the
+platform keychain. `supabase/schema.sql` creates the table and an RLS policy that only
+accepts requests carrying the token — the anon key is public by design, the token is the
+workspace password.
+
+Conflicts, failures and counts are surfaced verbatim in Settings → Cloud sync; background
+sync (opt-in) runs after the first paint and never blocks it.
+
+## Scanning, OCR and speech
+
+- `src/services/scan.ts` — capture N pages (camera via expo-image-picker), optionally run
+  OCR per page, then emit note HTML (`<h3>Page n</h3><img …>` plus recognised paragraphs).
+  The capture function is injected, so the pipeline is unit-tested without a camera.
+- `src/services/ocr.ts` — ML Kit text recognition through `expo-mlkit-ocr`, all on-device.
+  Availability is reported per platform; failures keep the image and surface the message.
+- `src/services/voice.ts` — `expo-speech-recognition` on Android/iOS (permission request,
+  interim + final results, human-readable errors) and the browser SpeechRecognition API on
+  web. Both share one session interface.
+
 ## Security
 
 - PIN: 4–8 digits, salted and hashed (expo-crypto) into SecureStore. Never in SQLite,
