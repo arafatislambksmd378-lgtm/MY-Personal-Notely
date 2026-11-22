@@ -201,14 +201,33 @@ tap_text "Home"
 sleep 1
 shot 26-home-final
 
-# ------------------------------------------------------------------- logcat --
+# ---------------------------------------------------- health checks (blocking) --
+# A tour that leaves the launcher on screen means the app died; that must fail
+# the job instead of shipping screenshots of Android's home screen.
+EXIT_CODE=0
+
 $ADB logcat -d > "$OUT_DIR/logcat.txt" || true
-if grep -q "FATAL EXCEPTION" "$OUT_DIR/logcat.txt"; then
-  echo "::error::FATAL EXCEPTION in logcat"
-  grep -A 20 "FATAL EXCEPTION" "$OUT_DIR/logcat.txt" | head -60
-else
-  echo "no fatal exceptions in logcat"
+FATAL_COUNT=$(grep -c "FATAL EXCEPTION" "$OUT_DIR/logcat.txt" || true)
+echo "fatal exceptions: ${FATAL_COUNT:-0}" | tee "$OUT_DIR/health.txt"
+if [ "${FATAL_COUNT:-0}" -gt 0 ]; then
+  {
+    echo "::error::FATAL EXCEPTION during the UI tour ($FATAL_COUNT)"
+    grep -A 14 "FATAL EXCEPTION" "$OUT_DIR/logcat.txt" | head -60
+  } | tee -a "$OUT_DIR/health.txt"
+  EXIT_CODE=1
 fi
+
+FOREGROUND=$($ADB shell dumpsys activity activities 2>/dev/null | grep -m1 "topResumedActivity" || true)
+echo "foreground: $FOREGROUND" | tee -a "$OUT_DIR/health.txt"
+case "$FOREGROUND" in
+  *com.notely.app*) echo "Notely is in the foreground after the tour." | tee -a "$OUT_DIR/health.txt" ;;
+  *)
+    echo "::error::Notely is not in the foreground after the tour:$FOREGROUND" | tee -a "$OUT_DIR/health.txt"
+    EXIT_CODE=1
+    ;;
+esac
+
 grep -cE "ReactNativeJS.*(Error|Warning)" "$OUT_DIR/logcat.txt" > "$OUT_DIR/js-log-count.txt" 2>/dev/null || true
 rm -f "$OUT_DIR/last-ui.xml"
 ls -la "$OUT_DIR"
+exit "$EXIT_CODE"

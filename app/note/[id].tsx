@@ -524,6 +524,7 @@ export default function NoteEditorScreen() {
         onFind={() => openSheet('find')}
         onToggleCollapse={() => setCollapsed((value) => !value)}
         collapsed={collapsed}
+        bottomInset={insets.bottom}
       />
 
       {/* ------------------------------- sheets ------------------------------ */}

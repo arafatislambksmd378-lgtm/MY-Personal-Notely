@@ -2,33 +2,30 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { usePathname, useRouter } from 'expo-router';
 
 import { useColors } from '@/store/useSettingsStore';
 import { fontFamily } from '@/design/typography';
 import { spacing } from '@/design/tokens';
-
-const ICONS: Record<string, { active: keyof typeof Ionicons.glyphMap; inactive: keyof typeof Ionicons.glyphMap; label: string }> = {
-  index: { active: 'home', inactive: 'home-outline', label: 'Home' },
-  notebooks: { active: 'albums', inactive: 'albums-outline', label: 'Notebooks' },
-  settings: { active: 'settings', inactive: 'settings-outline', label: 'Settings' },
-};
+import { TAB_ROUTES, activeTabIndex, shouldNavigateToTab } from '@/utils/tabRoutes';
 
 /**
- * Minimal structural subset of expo-router's vendored BottomTabBarProps.
- * Declared locally so the app does not depend on a specific navigation package
- * build while still being fully typed at the call site.
+ * Renders itself from the current route rather than from the props expo-router
+ * passes to a custom `tabBar`.
+ *
+ * The previous version called `navigation.emit(...)` on injected props. In this
+ * expo-router build those props do not include `navigation`, so every tab tap
+ * threw `TypeError: Cannot read property 'emit' of undefined` and took the
+ * process down with it (reproduced on the emulator, logcat shows
+ * `onPress@1:…` → `_performTransitionSideEffects`). Reading the pathname and
+ * navigating with the router keeps the bar independent of that internal shape.
  */
-export interface NotelyTabBarProps {
-  state: { index: number; routes: { key: string; name: string }[] };
-  navigation: {
-    emit: (event: { type: 'tabPress'; target: string; canPreventDefault: true }) => { defaultPrevented: boolean };
-    navigate: (name: string, params?: Record<string, unknown>) => void;
-  };
-}
-
-export function TabBar({ state, navigation }: NotelyTabBarProps) {
+export function TabBar() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const pathname = usePathname();
+  const router = useRouter();
+  const activeIndex = activeTabIndex(pathname);
 
   return (
     <View
@@ -42,27 +39,25 @@ export function TabBar({ state, navigation }: NotelyTabBarProps) {
       ]}
       accessibilityRole="tablist"
     >
-      {state.routes.map((route: { key: string; name: string }, index: number) => {
-        const meta = ICONS[route.name] ?? { active: 'ellipse', inactive: 'ellipse-outline', label: route.name };
-        const focused = state.index === index;
+      {TAB_ROUTES.map((route, index) => {
+        const focused = activeIndex === index;
         const tint = focused ? colors.primary : colors.textMuted;
         return (
           <Pressable
-            key={route.key}
+            key={route.name}
             accessibilityRole="tab"
             accessibilityState={{ selected: focused }}
-            accessibilityLabel={meta.label}
+            accessibilityLabel={route.label}
             onPress={() => {
-              const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
-              if (!focused && !event.defaultPrevented) navigation.navigate(route.name);
+              if (shouldNavigateToTab(index, pathname)) router.navigate(route.href);
             }}
             style={styles.item}
             testID={`tab-${route.name}`}
           >
             <View style={styles.iconWrapper}>
-              <Ionicons name={focused ? meta.active : meta.inactive} size={22} color={tint} />
+              <Ionicons name={focused ? route.icon : route.iconOutline} size={22} color={tint} />
             </View>
-            <Text style={[styles.label, { color: tint }]}>{meta.label}</Text>
+            <Text style={[styles.label, { color: tint }]}>{route.label}</Text>
           </Pressable>
         );
       })}

@@ -15,6 +15,8 @@ interface EditorBottomBarProps {
   onFind: () => void;
   onToggleCollapse: () => void;
   collapsed: boolean;
+  /** Extra padding so the bar clears the Android gesture pill / iOS home bar. */
+  bottomInset?: number;
 }
 
 interface BarButtonProps {
@@ -58,10 +60,20 @@ export function EditorBottomBar({
   onFind,
   onToggleCollapse,
   collapsed,
+  bottomInset = 0,
 }: EditorBottomBarProps) {
   const colors = useColors();
   return (
-    <View style={[styles.wrapper, { backgroundColor: colors.canvas, borderTopColor: colors.border }]}>
+    <View
+      style={[
+        styles.wrapper,
+        {
+          backgroundColor: colors.canvas,
+          borderTopColor: colors.border,
+          paddingBottom: spacing.sm + bottomInset,
+        },
+      ]}
+    >
       <BarButton icon="add" label="Insert content" onPress={onOpenInsert} primary />
       <BarButton icon="text" label="Text style" onPress={onOpenTextStyle} />
       <BarButton icon="image-outline" label="Insert image" onPress={onInsertImage} />
