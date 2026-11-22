@@ -1,8 +1,0 @@
-- Creating native directory (./android)
-✔ Created native directory
-- Updating package.json
-✔ Updated package.json
-- Running prebuild
-» android: EDGE_TO_EDGE_PLUGIN: `edgeToEdgeEnabled` customization is no longer available - Android 16 makes edge-to-edge mandatory. Remove the `edgeToEdgeEnabled` entry from your app.json/app.config.js.
-- Running prebuild
-✔ Finished prebuild
