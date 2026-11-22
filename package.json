@@ -15,7 +15,8 @@
     "build:web": "npm run vendor:web && expo export --platform web",
     "preview": "node scripts/serve-web.mjs",
     "vendor:web": "node scripts/vendor-web-assets.mjs",
-    "verify": "npm run typecheck && npm run lint && npm test"
+    "verify": "npm run typecheck && npm run lint && npm test",
+    "test:live": "NOTELY_LIVE_SYNC=1 vitest run tests/live-sync.test.ts"
   },
   "dependencies": {
     "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",

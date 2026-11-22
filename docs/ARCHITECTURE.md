@@ -112,6 +112,14 @@ workspace password.
 Conflicts, failures and counts are surfaced verbatim in Settings → Cloud sync; background
 sync (opt-in) runs after the first paint and never blocks it.
 
+The schema, the RLS gate and the push/pull payloads have been executed against a live
+Supabase project (`tdbdranlguvrykgrllfv`, `ap-southeast-1`): the token gate authorises the
+right token and rejects a wrong or absent one, `anon` may insert/select/delete only with
+the token, upserts never duplicate, incremental pulls respect the watermark, tombstones
+travel and workspaces stay isolated. The raw checks and their outputs are in
+`docs/evidence/cloud-sync-live.md`; `tests/live-sync.test.ts` re-runs the same contract
+through the shipped HTTP client when credentials are supplied.
+
 ## Scanning, OCR and speech
 
 - `src/services/scan.ts` — capture N pages (camera via expo-image-picker), optionally run
