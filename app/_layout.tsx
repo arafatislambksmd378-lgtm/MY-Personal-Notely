@@ -51,6 +51,16 @@ export default function RootLayout() {
       // A protected notebook always starts locked.
       if (current.appLockEnabled) lock();
       setBoot('ready');
+
+      // Background sync is best-effort: it never delays the first paint and a
+      // failure is recorded in Settings → Cloud sync instead of interrupting.
+      if (current.cloudSyncEnabled) {
+        void (async () => {
+          const { syncNow } = await import('@/services/sync');
+          const result = await syncNow();
+          if (result.ok && (result.pulled > 0 || result.pushed > 0)) await refreshLibrary();
+        })().catch(() => undefined);
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       setBootError(message);

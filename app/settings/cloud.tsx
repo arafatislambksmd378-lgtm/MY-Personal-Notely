@@ -1,9 +1,12 @@
 /**
- * Cloud sync. Notely is offline-first: this screen reports the true state of
- * the optional Supabase backend and never pretends a sync happened.
+ * Cloud sync settings.
+ *
+ * Real sync against a Supabase project: connect, test, sync now. Every number
+ * shown here comes from an actual sync run; when nothing is connected the
+ * screen says so instead of implying background magic.
  */
-import { useCallback, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { Linking, StyleSheet, View } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 
 import { Screen } from '@/components/Screen';
@@ -14,135 +17,230 @@ import { ListRow } from '@/components/ListRow';
 import { SectionHeader } from '@/components/SectionHeader';
 import { ToggleSwitch } from '@/components/ToggleSwitch';
 import { Button } from '@/components/Button';
+import { CloudConnectSheet } from '@/features/settings/CloudConnectSheet';
 import { useColors, useSettingsStore } from '@/store/useSettingsStore';
-import { APP_CONFIG, isCloudConfigured } from '@/config/app';
+import { useLibraryStore } from '@/store/useLibraryStore';
+import { clearSyncConfig, createSyncClient, resolveSyncConfig, type SyncConfig } from '@/services/supabase';
+import { getSyncStatus, syncNow, type SyncResult } from '@/services/sync';
+import { relativeTime } from '@/utils/dates';
 import { toast } from '@/store/useToastStore';
-import { logEvent } from '@/db/repositories/events';
 import { spacing } from '@/design/tokens';
-
-type CheckState = 'idle' | 'checking' | 'ok' | 'error';
 
 export default function CloudSettings() {
   const colors = useColors();
   const settings = useSettingsStore((state) => state.settings);
   const patch = useSettingsStore((state) => state.patch);
-  const [state, setState] = useState<CheckState>('idle');
+  const refreshLibrary = useLibraryStore((state) => state.refresh);
+
+  const [config, setConfig] = useState<SyncConfig | null>(null);
+  const [status, setStatus] = useState<{
+    connected: boolean;
+    spaceId: string | null;
+    url: string | null;
+    lastSyncAt: string | null;
+    lastResult: SyncResult | null;
+  } | null>(null);
+  const [busy, setBusy] = useState<'test' | 'sync' | null>(null);
+  const [connectOpen, setConnectOpen] = useState(false);
   const [detail, setDetail] = useState<string | null>(null);
 
-  const testConnection = useCallback(async () => {
-    if (!isCloudConfigured) return;
-    setState('checking');
-    setDetail(null);
-    try {
-      const response = await fetch(`${APP_CONFIG.supabaseUrl.replace(/\/$/, '')}/rest/v1/`, {
-        headers: {
-          apikey: APP_CONFIG.supabaseAnonKey,
-          Authorization: `Bearer ${APP_CONFIG.supabaseAnonKey}`,
-        },
-      });
-      if (!response.ok) throw new Error(`Backend replied ${response.status}`);
-      setState('ok');
-      setDetail('Reachable with the configured anon key. Row-level security still decides what this device can read.');
-      toast.success('Supabase is reachable');
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Connection failed';
-      setState('error');
-      setDetail(message);
-      void logEvent('warn', 'cloud', 'Supabase check failed', { message });
-      toast.error(message);
-    }
+  const load = useCallback(async () => {
+    setConfig(await resolveSyncConfig());
+    setStatus(await getSyncStatus());
   }, []);
 
-  const copyEnv = useCallback(async () => {
-    await Clipboard.setStringAsync(
-      `EXPO_PUBLIC_SUPABASE_URL=${APP_CONFIG.supabaseUrl || 'https://your-project.supabase.co'}\nEXPO_PUBLIC_SUPABASE_ANON_KEY=${APP_CONFIG.supabaseAnonKey || 'your-anon-key'}`,
-    );
-    toast.success('Environment snippet copied');
-  }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => void load(), 0);
+    return () => clearTimeout(timer);
+  }, [load]);
+
+  const test = async () => {
+    setBusy('test');
+    setDetail(null);
+    try {
+      if (!config) throw new Error('Connect a project first.');
+      await createSyncClient(config).ping();
+      setDetail('Reachable, table found, token accepted.');
+      toast.success('Supabase connection works');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Connection failed';
+      setDetail(message);
+      toast.error(message);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const runSync = async () => {
+    setBusy('sync');
+    setDetail(null);
+    try {
+      const result = await syncNow();
+      await refreshLibrary();
+      await load();
+      if (result.ok) {
+        setDetail(
+          `Pushed ${result.pushed}, pulled ${result.pulled}${result.conflicts ? `, ${result.conflicts} conflict${result.conflicts === 1 ? '' : 's'} resolved (local drafts kept in history)` : ''}.`,
+        );
+        toast.success('Sync finished');
+      } else {
+        setDetail(result.error ?? 'Sync failed');
+        toast.error(result.error ?? 'Sync failed');
+      }
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const connected = Boolean(config);
+  const result = status?.lastResult;
 
   return (
     <Screen>
-      <ScreenHeader title="Cloud sync" subtitle="Optional, off by default" />
+      <ScreenHeader title="Cloud sync" subtitle={connected ? `Workspace “${config?.spaceId}”` : 'Off — everything stays on this device'} />
 
       <Card style={{ gap: spacing.sm }}>
         <View style={styles.statusRow}>
-          <View style={[styles.dot, { backgroundColor: isCloudConfigured ? colors.success : colors.textMuted }]} />
-          <AppText variant="bodyStrong">
-            {isCloudConfigured ? 'Backend configured' : 'Local-only mode'}
-          </AppText>
+          <View style={[styles.dot, { backgroundColor: connected ? colors.success : colors.textMuted }]} />
+          <AppText variant="bodyStrong">{connected ? 'Connected to Supabase' : 'Local-only mode'}</AppText>
         </View>
         <AppText variant="caption" tone="muted">
-          {isCloudConfigured
-            ? `Connected to ${APP_CONFIG.supabaseUrl}. Sync is still dormant until you enable it below.`
-            : 'Every note lives in SQLite on this device. Nothing is uploaded, and the app works without a network.'}
+          {connected
+            ? `${config?.url} · last sync ${status?.lastSyncAt ? relativeTime(status.lastSyncAt) : 'never'}`
+            : 'Notes live in SQLite on this device. Connect a Supabase project to mirror them between your devices.'}
         </AppText>
-      </Card>
-
-      <SectionHeader title="Sync" overline style={{ marginTop: spacing.lg }} />
-      <Card style={{ gap: spacing.sm }}>
-        <ListRow
-          icon="cloud-outline"
-          accent="blue"
-          title="Enable cloud sync"
-          subtitle={isCloudConfigured ? 'Mirror backups to your Supabase project' : 'Requires Supabase credentials'}
-          showChevron={false}
-          right={
-            <ToggleSwitch
-              value={settings.cloudSyncEnabled}
-              disabled={!isCloudConfigured}
-              onChange={(value) => {
-                if (value && !isCloudConfigured) {
-                  toast.show('Add Supabase credentials first.');
-                  return;
-                }
-                void patch({ cloudSyncEnabled: value });
-              }}
-              accessibilityLabel="Cloud sync"
+        {connected ? (
+          <View style={styles.actions}>
+            <Button
+              label={busy === 'sync' ? 'Syncing…' : 'Sync now'}
+              icon="sync-outline"
+              loading={busy === 'sync'}
+              onPress={() => void runSync()}
             />
-          }
-        />
-        <Button
-          label={state === 'checking' ? 'Checking…' : 'Test backend connection'}
-          icon="pulse-outline"
-          variant="secondary"
-          disabled={!isCloudConfigured || state === 'checking'}
-          loading={state === 'checking'}
-          onPress={() => void testConnection()}
-        />
+            <Button
+              label={busy === 'test' ? 'Testing…' : 'Test connection'}
+              icon="pulse-outline"
+              variant="secondary"
+              loading={busy === 'test'}
+              onPress={() => void test()}
+            />
+          </View>
+        ) : (
+          <Button label="Connect a Supabase project" icon="cloud-outline" onPress={() => setConnectOpen(true)} />
+        )}
         {detail ? (
-          <AppText variant="label" tone={state === 'error' ? 'default' : 'muted'}>
+          <AppText variant="label" tone="secondary">
             {detail}
           </AppText>
         ) : null}
       </Card>
 
-      <SectionHeader title="How to connect" overline style={{ marginTop: spacing.lg }} />
+      {result ? (
+        <>
+          <SectionHeader title="Last sync" overline style={{ marginTop: spacing.lg }} />
+          <Card style={{ gap: spacing.xs }}>
+            <AppText variant="caption" tone={result.ok ? 'secondary' : 'default'}>
+              {result.ok ? 'Completed' : 'Failed'} · {relativeTime(result.at)} · {(result.durationMs / 1000).toFixed(1)}s
+            </AppText>
+            <AppText variant="label" tone="muted">
+              {result.pushed} pushed · {result.pulled} pulled · {result.updated} applied · {result.conflicts} conflicts ·{' '}
+              {result.skipped} already current
+            </AppText>
+            {result.error ? (
+              <AppText variant="label" style={{ color: colors.danger }}>
+                {result.error}
+              </AppText>
+            ) : null}
+          </Card>
+        </>
+      ) : null}
+
+      <SectionHeader title="Behaviour" overline style={{ marginTop: spacing.lg }} />
+      <Card style={{ gap: spacing.sm }}>
+        <ListRow
+          icon="sync-outline"
+          accent="blue"
+          title="Sync in the background"
+          subtitle="Push and pull whenever the app opens (still offline-first)"
+          showChevron={false}
+          right={
+            <ToggleSwitch
+              value={settings.cloudSyncEnabled}
+              disabled={!connected}
+              onChange={(value) => void patch({ cloudSyncEnabled: value })}
+              accessibilityLabel="Background sync"
+            />
+          }
+        />
+        <ListRow
+          icon="git-compare-outline"
+          accent="purple"
+          title="Conflict policy"
+          subtitle="Last write wins; the overwritten local draft is kept in version history"
+        />
+        {connected ? (
+          <Button
+            label="Disconnect project"
+            icon="cloud-offline-outline"
+            variant="ghost"
+            onPress={async () => {
+              await clearSyncConfig();
+              await patch({ cloudSyncEnabled: false });
+              await load();
+              setDetail('Disconnected. Local notes are untouched.');
+              toast.success('Cloud sync disconnected');
+            }}
+          />
+        ) : null}
+      </Card>
+
+      <SectionHeader title="Setting it up" overline style={{ marginTop: spacing.lg }} />
       <Card style={{ gap: spacing.sm }}>
         <AppText variant="caption" tone="secondary">
-          1. Create a Supabase project and enable a Postgres table for backups.{'\n'}
-          2. Copy the project URL and anon key.{'\n'}
-          3. Put them in your environment before starting the app:
+          1. Create a Supabase project and open the SQL editor.{'\n'}
+          2. Paste supabase/schema.sql from this repository and replace the token literal.{'\n'}
+          3. Use the same token here, together with the project URL and anon key.{'\n'}
+          4. Pick a workspace id shared by the devices you want to keep in sync.
         </AppText>
-        <View style={[styles.code, { backgroundColor: colors.surfaceMuted, borderColor: colors.border }]}>
-          <AppText variant="label" tone="secondary" selectable>
-            EXPO_PUBLIC_SUPABASE_URL=…{'\n'}EXPO_PUBLIC_SUPABASE_ANON_KEY=…
-          </AppText>
+        <View style={styles.actions}>
+          <Button
+            label="Copy connect checklist"
+            icon="copy-outline"
+            variant="ghost"
+            onPress={async () => {
+              await Clipboard.setStringAsync(
+                'Notely sync setup\n1. Run supabase/schema.sql in your Supabase SQL editor.\n2. Replace the token literal in the RLS policy.\n3. Settings → Cloud sync → Connect a Supabase project.\n4. Use the same workspace id on every device.',
+              );
+              toast.success('Checklist copied');
+            }}
+          />
+          <Button
+            label="Schema file"
+            icon="document-text-outline"
+            variant="ghost"
+            onPress={() => {
+              void Linking.openURL('https://github.com/arafatislambksmd378-lgtm/MY-Personal-Notely/blob/main/supabase/schema.sql').catch(
+                () => toast.error('Could not open the browser'),
+              );
+            }}
+          />
         </View>
-        <Button label="Copy environment snippet" icon="copy-outline" variant="ghost" onPress={() => void copyEnv()} />
         <AppText variant="label" tone="muted">
-          The anon key is a public identifier; never paste a service-role key into the app. Row-level security is what
-          protects your data.
+          Security: the anon key is public by design, so access is gated by the token in the RLS policy. Treat that token
+          as the password for this workspace — rotate it in both places if it leaks. Multi-user sharing needs Supabase
+          Auth with per-user policies instead.
         </AppText>
       </Card>
 
-      <SectionHeader title="What sync would do" overline style={{ marginTop: spacing.lg }} />
-      <Card>
-        <AppText variant="caption" tone="muted">
-          Notes are written locally first and remain fully usable offline. A future sync pass uploads changed notes and
-          pulls remote versions, with local edits winning conflicts. Until that pass exists, Notely does not claim to
-          sync anything.
-        </AppText>
-      </Card>
+      <CloudConnectSheet
+        visible={connectOpen}
+        onClose={() => setConnectOpen(false)}
+        initial={{ url: config?.url ?? '' , spaceId: config?.spaceId ?? 'default' }}
+        onConnected={() => {
+          void patch({ cloudSyncEnabled: true });
+          void load();
+        }}
+      />
 
       <View style={{ height: spacing.xl }} />
     </Screen>
@@ -152,5 +250,5 @@ export default function CloudSettings() {
 const styles = StyleSheet.create({
   statusRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   dot: { width: 10, height: 10, borderRadius: 5 },
-  code: { borderRadius: 10, borderWidth: 1, padding: spacing.md },
+  actions: { flexDirection: 'row', gap: spacing.xs, flexWrap: 'wrap' },
 });
