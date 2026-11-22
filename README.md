@@ -1,9 +1,9 @@
 # Android CI evidence
 
-- Run: 45014474548
-- Commit: 04717473728b452e08d36b2b940eae3ba4029476
-- Updated: 2026-11-22T11:25:39Z
+- Run: 45025565454
+- Commit: bcc3ed8ddfc38a5c14320909b185aa6404976157
+- Updated: 2026-11-22T13:21:10Z
 
 Produced by the Android workflow: build logs, build facts and emulator
 screenshots. APKs and AABs are attached to the tagged GitHub release
-named in `build/screenshots/build-info.md` (git cannot hold a 100 MB+ binary).
+named in `build/android/build-info.md` (git cannot hold a 100 MB+ binary).
