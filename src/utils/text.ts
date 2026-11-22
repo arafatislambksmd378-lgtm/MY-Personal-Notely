@@ -107,3 +107,30 @@ export function truncate(value: string, max: number): string {
 export function pluralize(count: number, singular: string, plural?: string): string {
   return `${count} ${count === 1 ? singular : (plural ?? `${singular}s`)}`;
 }
+
+/** Number of non-overlapping occurrences of `needle` in `haystack`. */
+export function countOccurrences(haystack: string, needle: string, matchCase = false): number {
+  if (!needle) return 0;
+  const hay = matchCase ? haystack : haystack.toLowerCase();
+  const target = matchCase ? needle : needle.toLowerCase();
+  let count = 0;
+  let index = hay.indexOf(target);
+  while (index !== -1) {
+    count += 1;
+    index = hay.indexOf(target, index + target.length);
+  }
+  return count;
+}
+
+/** Paragraph count derived from blank-line separation. */
+export function countParagraphs(text: string): number {
+  return text
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter(Boolean).length;
+}
+
+/** Characters excluding whitespace. */
+export function countCharsNoSpaces(text: string): number {
+  return text.replace(/\s/g, '').length;
+}

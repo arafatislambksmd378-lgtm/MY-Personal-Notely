@@ -48,6 +48,12 @@ export type EditorMessage =
   | { type: 'change'; html: string; plainText: string; wordCount: number; charCount: number }
   | { type: 'selection'; info: EditorSelectionInfo }
   | { type: 'save-shortcut' }
+  | { type: 'find-result'; count: number }
+  | { type: 'replace-result'; count: number }
+  | { type: 'media'; kind: string; dataUri: string; bytes: number }
+  | { type: 'toc-empty' }
+  | { type: 'link-click'; href: string }
+  | { type: 'selection-text'; text: string }
   | { type: 'height'; height: number }
   | { type: 'error'; message: string };
 
@@ -68,10 +74,13 @@ export type HostMessage =
   | { type: 'insertFootnote'; marker: string; text: string }
   | { type: 'insertToc' }
   | { type: 'insertBookmark'; id: string; label: string }
-  | { type: 'replaceAll'; search: string; replacement: string; matchCase: boolean }
+  | { type: 'replaceAll'; search: string; replacement: string; matchCase: boolean; limit?: number }
   | { type: 'highlightFind'; search: string; matchCase: boolean; index: number }
   | { type: 'clearFind' }
   | { type: 'focus' }
   | { type: 'blur' }
-  | { type: 'set-page-setup'; pageSetup: string }
+  | { type: 'set-page-setup'; pageSetup: string; fontScale?: number }
+  | { type: 'open-drawing' }
+  | { type: 'request-selection' }
+  | { type: 'scroll-to-anchor'; anchor: string }
   | { type: 'set-theme'; dark: boolean };
