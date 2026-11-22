@@ -14,10 +14,18 @@ if git fetch origin ci-artifacts:refs/remotes/origin/ci-artifacts 2>/dev/null; t
   git checkout -q -B ci-artifacts origin/ci-artifacts
 else
   git checkout -q --orphan ci-artifacts
-  git rm -rq --cached . >/dev/null 2>&1 || true
 fi
+# The evidence branch must contain evidence only, never a copy of the app.
+git rm -rq --cached . >/dev/null 2>&1 || true
+git read-tree --empty
 
 mkdir -p "$DEST_DIR"
+
+# Logs can be huge; publish the tail that actually explains a failure.
+for log in "$SOURCE_DIR"/android/*.log; do
+  [ -f "$log" ] || continue
+  tail -n 4000 "$log" > "$log.tail" && mv "$log.tail" "$log"
+done
 # Copy whatever exists; the branch is a record of the latest run's evidence.
 if [ -d "$SOURCE_DIR/android" ]; then
   cp -f "$SOURCE_DIR"/android/*.md "$DEST_DIR"/ 2>/dev/null || true
