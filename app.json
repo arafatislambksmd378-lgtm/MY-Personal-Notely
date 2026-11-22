@@ -1,0 +1,69 @@
+{
+  "expo": {
+    "name": "Notely",
+    "slug": "notely",
+    "scheme": "notely",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#F7F6FB",
+    "primaryColor": "#7C3AED",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.notely.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Notely uses the camera to scan documents and insert photos into your notes.",
+        "NSPhotoLibraryUsageDescription": "Notely lets you insert images from your photo library into notes."
+      }
+    },
+    "android": {
+      "package": "com.notely.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#EFE9FF",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "permissions": ["android.permission.RECORD_AUDIO"]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160,
+          "resizeMode": "contain",
+          "backgroundColor": "#F7F6FB"
+        }
+      ],
+      "expo-secure-store",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow Notely to use Face ID to unlock your notebook."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Notely lets you insert images from your photo library into notes.",
+          "cameraPermission": "Notely uses the camera to scan documents and insert photos into notes."
+        }
+      ],
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
