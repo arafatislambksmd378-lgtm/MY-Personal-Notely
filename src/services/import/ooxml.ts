@@ -37,6 +37,7 @@ export async function docxToHtml(bytes: Uint8Array): Promise<string> {
   if (!documentFile) throw new Error('This file is not a valid DOCX document (word/document.xml missing).');
   const xml = stripNamespaces(await documentFile.async('string'));
 
+  // Media parts, keyed by the path Word uses inside the package.
   const mediaMap = new Map<string, string>();
   const mediaFiles = Object.keys(zip.files).filter((name) => name.startsWith('word/media/'));
   for (const name of mediaFiles) {
@@ -44,8 +45,48 @@ export async function docxToHtml(bytes: Uint8Array): Promise<string> {
     if (!file) continue;
     const base64 = await file.async('base64');
     const extension = name.split('.').pop()?.toLowerCase() ?? 'png';
-    const mime = extension === 'jpg' ? 'jpeg' : extension;
+    const mime = extension === 'jpg' || extension === 'jpeg' ? 'jpeg' : extension === 'svg' ? 'svg+xml' : extension;
     mediaMap.set(name.replace('word/', ''), `data:image/${mime};base64,${base64}`);
+  }
+
+  // relationship id → data URI, so `r:embed="rId5"` becomes a real <img>.
+  const relsFile = zip.file('word/_rels/document.xml.rels');
+  const relMap = new Map<string, string>();
+  if (relsFile) {
+    const relsXml = await relsFile.async('string');
+    for (const tag of relsXml.match(/<Relationship\b[^>]*>/g) ?? []) {
+      const id = attr(tag, 'Id');
+      const target = attr(tag, 'Target');
+      if (!id || !target) continue;
+      const normalised = target.replace(/^\.\//, '').replace(/^\/word\//, '');
+      const dataUri = mediaMap.get(normalised);
+      if (dataUri) relMap.set(id, dataUri);
+    }
+  }
+
+  // numId → bullet or decimal, so ordered lists survive the trip.
+  const numberingFile = zip.file('word/numbering.xml');
+  const orderedNumerations = new Set<string>();
+  if (numberingFile) {
+    const numberingXml = stripNamespaces(await numberingFile.async('string'));
+    const abstractFormats = new Map<string, string>();
+    for (const abstractTag of numberingXml.match(/<abstractNum\b[^>]*>/g) ?? []) {
+      const abstractId = attr(abstractTag, 'abstractNumId');
+      if (!abstractId) continue;
+      const block = new RegExp(`<abstractNum abstractNumId="${abstractId}"[^>]*>([\\s\\S]*?)</abstractNum>`).exec(
+        numberingXml,
+      )?.[1];
+      const format = block ? /<numFmt val="([^"]+)"/.exec(block)?.[1] : undefined;
+      if (format) abstractFormats.set(abstractId, format);
+    }
+    for (const numTag of numberingXml.match(/<num\b[^>]*>/g) ?? []) {
+      const numId = attr(numTag, 'numId');
+      if (!numId) continue;
+      const block = new RegExp(`<num numId="${numId}"[^>]*>([\\s\\S]*?)</num>`).exec(numberingXml)?.[1];
+      const abstractId = block ? /<abstractNumId val="(\d+)"/.exec(block)?.[1] : undefined;
+      const format = abstractId ? abstractFormats.get(abstractId) : undefined;
+      if (format && format !== 'bullet' && format !== 'none') orderedNumerations.add(numId);
+    }
   }
 
   const bodyMatch = /<body[^>]*>([\s\S]*)<\/body>/.exec(xml);
@@ -89,7 +130,8 @@ export async function docxToHtml(bytes: Uint8Array): Promise<string> {
     const pPr = pPrMatch ? pPrMatch[1] : '';
     const styleId = attr(/<pStyle[^>]*>/.exec(pPr)?.[0] ?? '', 'val') ?? '';
     const isList = /<numPr>/.test(pPr);
-    const isOrdered = /<numId val="2"/.test(pPr);
+    const numId = /<numId val="(\d+)"/.exec(pPr)?.[1];
+    const isOrdered = numId ? orderedNumerations.has(numId) : false;
     const runs = renderRuns(paragraphContent ?? '');
 
     if (isList) {
@@ -121,6 +163,22 @@ export async function docxToHtml(bytes: Uint8Array): Promise<string> {
     let runMatch: RegExpExecArray | null;
     while ((runMatch = runRegex.exec(content))) {
       const run = runMatch[1];
+
+      // A run may carry a picture instead of text: resolve it through the
+      // document relationships so the image lands in place.
+      const embed =
+        /<blip[^>]*embed="([^"]+)"/.exec(run)?.[1] ??
+        /<imagedata[^>]*id="([^"]+)"/.exec(run)?.[1] ??
+        /<blip[^>]*embed="([^"]+)"/.exec(content)?.[1];
+      if (embed) {
+        const src = relMap.get(embed) ?? mediaMap.get(embed.replace(/^rId/, '')) ?? null;
+        if (src) {
+          const alt = /<docPr[^>]*descr="([^"]*)"/.exec(run)?.[1] ?? 'Imported image';
+          chunks.push(`<img src="${src}" alt="${alt}" />`);
+          continue;
+        }
+      }
+
       const rPr = /<rPr>([\s\S]*?)<\/rPr>/.exec(run)?.[1] ?? '';
       const bold = /<b\s*\/>|<b>/.test(rPr);
       const italic = /<i\s*\/>|<i>/.test(rPr);
@@ -140,12 +198,6 @@ export async function docxToHtml(bytes: Uint8Array): Promise<string> {
       chunks.push(escaped);
     }
 
-    // Embedded pictures: map relationship ids to media parts.
-    const drawings = Array.from(content.matchAll(/<blip[^>]*r:embed="([^"]+)"/g));
-    for (const drawing of drawings) {
-      const rid = drawing[1];
-      void rid;
-    }
     return chunks.join('');
   }
 }

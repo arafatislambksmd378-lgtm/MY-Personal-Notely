@@ -41,7 +41,9 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-          cache: gradle
+
+      - name: Prepare artifact folder
+        run: mkdir -p artifacts/android
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
@@ -61,7 +63,8 @@ jobs:
         working-directory: android
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon --stacktrace assembleRelease bundleRelease
+          set -o pipefail
+          ./gradlew --no-daemon --stacktrace assembleRelease bundleRelease 2>&1 | tee ../artifacts/android/gradle.log
 
       - name: Collect build facts
         run: node scripts/android/build-info.mjs
@@ -86,13 +89,15 @@ jobs:
           gh release view "$TAG" --json assets,url > artifacts/android/release.json || true
 
       - name: Publish build report to ci-artifacts
+        if: always()
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           node scripts/android/publish-artifacts.mjs \
             "android/build-info.md=artifacts/android/build-info.md" \
-            "android/build-info.json=artifacts/android/build-info.json"
+            "android/build-info.json=artifacts/android/build-info.json" \
+            "android/gradle.log=artifacts/android/gradle.log"
 
   emulator:
     name: Emulator smoke test and screenshots

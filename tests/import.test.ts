@@ -108,12 +108,22 @@ describe('docx / odt round trip', () => {
     expect(result.plainText).toContain('Consistency is a feature.');
   });
 
-  it('imports a DOCX with images as data URIs', async () => {
-    const bytes = await htmlToDocx(`<p><img src="${TINY_PNG}" alt="dot" /></p>`);
+  it('imports a DOCX with images as inline data URIs', async () => {
+    const bytes = await htmlToDocx(`<p>Before</p><p><img src="${TINY_PNG}" alt="dot" /></p><p>After</p>`);
     const result = await importFromBytes('image.docx', bytes);
-    // Image relationship extraction is best-effort; the text must survive.
-    expect(result.html).toContain('<p>');
-    expect(result.plainText).not.toContain('<img');
+    // The picture is re-embedded through its relationship id.
+    expect(result.html).toMatch(/<img src="data:image\/png;base64,[A-Za-z0-9+/=]+" alt="[^"]*" \/>/);
+    // Position and surrounding text survive.
+    const imageIndex = result.html.indexOf('<img');
+    expect(result.html.indexOf('Before')).toBeLessThan(imageIndex);
+    expect(result.html.indexOf('After')).toBeGreaterThan(imageIndex);
+  });
+
+  it('keeps ordered lists ordered after a DOCX round trip', async () => {
+    const bytes = await htmlToDocx('<ol><li>First</li><li>Second</li></ol>');
+    const result = await importFromBytes('list.docx', bytes);
+    expect(result.html).toContain('<ol>');
+    expect(result.html).toContain('<li>First</li>');
   });
 
   it('imports an ODT produced by Notely', async () => {
