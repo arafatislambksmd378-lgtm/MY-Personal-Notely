@@ -43,3 +43,6 @@ yarn-error.*
 
 # CI artifacts
 artifacts/
+
+# Agent scratch space
+.arena/

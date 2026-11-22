@@ -1,7 +1,0 @@
-Starting: Intent { cmp=com.notely.app/.MainActivity }
-Status: ok
-LaunchState: COLD
-Activity: com.notely.app/.MainActivity
-TotalTime: 3467
-WaitTime: 3671
-Complete

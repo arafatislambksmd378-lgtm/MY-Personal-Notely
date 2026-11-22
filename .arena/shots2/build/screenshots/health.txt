@@ -1,3 +1,0 @@
-fatal exceptions: 0
-foreground:       topResumedActivity=ActivityRecord{e720c9d u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t7}
-::error::Notely is not in the foreground after the tour:      topResumedActivity=ActivityRecord{e720c9d u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t7}
