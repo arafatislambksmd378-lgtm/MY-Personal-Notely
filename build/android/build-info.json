@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-22T10:36:27.991Z",
-  "commit": "11590f9f384d41142cf00083a5d29649a2cac8ec",
-  "runId": "45011265219",
-  "runUrl": "https://github.com/arafatislambksmd378-lgtm/MY-Personal-Notely/actions/runs/45011265219",
+  "generatedAt": "2026-11-22T11:18:12.159Z",
+  "commit": "04717473728b452e08d36b2b940eae3ba4029476",
+  "runId": "45014474548",
+  "runUrl": "https://github.com/arafatislambksmd378-lgtm/MY-Personal-Notely/actions/runs/45014474548",
   "signing": "debug keystore (Expo template default)",
   "java": "openjdk version \"17.0.21\" 2026-10-20",
   "node": "v22.23.5",
@@ -13,13 +13,13 @@
       "kind": "APK",
       "file": "/home/runner/work/MY-Personal-Notely/MY-Personal-Notely/artifacts/android/notely-app-release.apk",
       "bytes": 147372000,
-      "sha256": "98eadaf84318807f8a42dc77810823b800da2f2557f221209274ccc18f8bb67c"
+      "sha256": "e87595e05170241d7fef38604d579241b0a8507876745f632fb7472afaf6aef9"
     },
     {
       "kind": "AAB",
       "file": "/home/runner/work/MY-Personal-Notely/MY-Personal-Notely/artifacts/android/notely-app-release.aab",
-      "bytes": 90449675,
-      "sha256": "81eb2fbae0c23a8985131aac3b921df0f8818dad55ed81a16803d95536aff6b3"
+      "bytes": 90449671,
+      "sha256": "123d80c5a6a53a09814e886ed2e1978be8d9a3fcb95d941104a9c2811d6f092f"
     }
   ]
 }

@@ -1,8 +1,8 @@
 # Android CI evidence
 
-- Run: 45014435738
-- Commit: 91be6f2eeaa5316ef77720b74fc1f1a58c19f618
-- Updated: 2026-11-22T11:02:28Z
+- Run: 45014474548
+- Commit: 04717473728b452e08d36b2b940eae3ba4029476
+- Updated: 2026-11-22T11:18:29Z
 
 Produced by the Android workflow: build logs, build facts and emulator
 screenshots. APKs and AABs are attached to the tagged GitHub release
