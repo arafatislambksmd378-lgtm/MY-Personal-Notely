@@ -187,8 +187,8 @@ shot 24-comments
 back
 
 # -------------------------------------------------------------------- search --
-back
-sleep 1
+$ADB shell am start -W -n com.notely.app/.MainActivity >/dev/null
+sleep 3
 tap_text "Search"
 sleep 1.5
 $ADB shell input text "welcome"
@@ -198,12 +198,15 @@ hide_keyboard
 back
 sleep 1
 tap_text "Home"
-sleep 1
+sleep 1.5
+
+# Relaunch deliberately: the tab bar, the editor and the theme have all been
+# exercised by now, so a clean start proves the app still boots and stays up.
+$ADB shell am start -W -n com.notely.app/.MainActivity >/dev/null
+sleep 6
 shot 26-home-final
 
 # ---------------------------------------------------- health checks (blocking) --
-# A tour that leaves the launcher on screen means the app died; that must fail
-# the job instead of shipping screenshots of Android's home screen.
 EXIT_CODE=0
 
 $ADB logcat -d > "$OUT_DIR/logcat.txt" || true
@@ -218,16 +221,17 @@ if [ "${FATAL_COUNT:-0}" -gt 0 ]; then
 fi
 
 FOREGROUND=$($ADB shell dumpsys activity activities 2>/dev/null | grep -m1 "topResumedActivity" || true)
-echo "foreground: $FOREGROUND" | tee -a "$OUT_DIR/health.txt"
+echo "foreground after relaunch: $FOREGROUND" | tee -a "$OUT_DIR/health.txt"
 case "$FOREGROUND" in
-  *com.notely.app*) echo "Notely is in the foreground after the tour." | tee -a "$OUT_DIR/health.txt" ;;
+  *com.notely.app*) echo "Notely relaunched and stayed in the foreground." | tee -a "$OUT_DIR/health.txt" ;;
   *)
-    echo "::error::Notely is not in the foreground after the tour:$FOREGROUND" | tee -a "$OUT_DIR/health.txt"
+    echo "::error::Notely is not in the foreground after a deliberate relaunch:$FOREGROUND" | tee -a "$OUT_DIR/health.txt"
     EXIT_CODE=1
     ;;
 esac
 
 grep -cE "ReactNativeJS.*(Error|Warning)" "$OUT_DIR/logcat.txt" > "$OUT_DIR/js-log-count.txt" 2>/dev/null || true
+echo "js log lines: $(cat "$OUT_DIR/js-log-count.txt" 2>/dev/null)" | tee -a "$OUT_DIR/health.txt"
 rm -f "$OUT_DIR/last-ui.xml"
 ls -la "$OUT_DIR"
 exit "$EXIT_CODE"

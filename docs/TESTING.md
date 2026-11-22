@@ -6,8 +6,8 @@ npm run test:watch   # watch mode
 npx vitest run tests/editor.test.ts
 ```
 
-137 tests run offline in three environments, plus 11 opt-in tests that talk to a live
-Supabase project:
+146 tests run offline in three environments, plus 11 opt-in tests that talk to a live
+Supabase project (157 in total):
 
 | Environment | Setup | Used for |
 | --- | --- | --- |
@@ -37,6 +37,13 @@ covers sanitisation, table insertion and clamping, table of contents, footnotes,
 anchors, find/replace counts, and live page setup — without a browser or a device. jsdom
 does not implement `document.execCommand`, so formatting commands that depend on it
 (bold/italic/alignment) are exercised on device instead.
+
+## Navigation tests
+
+`tests/tabbar.test.ts` (9 tests) covers the tab route table and the focus mapping used by
+the bottom bar, and asserts at source level that `TabBar` no longer calls
+`navigation.emit(...)` on injected props. That call crashed the app on device — see
+`docs/evidence/android-device-run.md`.
 
 ## Live sync tests
 
