@@ -1,3 +1,4 @@
 fatal exceptions: 0
-foreground:       topResumedActivity=ActivityRecord{e720c9d u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t7}
-::error::Notely is not in the foreground after the tour:      topResumedActivity=ActivityRecord{e720c9d u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t7}
+foreground after relaunch:     topResumedActivity=ActivityRecord{19d0341 u0 com.notely.app/.MainActivity t14}
+Notely relaunched and stayed in the foreground.
+js log lines: 0
