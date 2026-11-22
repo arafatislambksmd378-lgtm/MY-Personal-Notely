@@ -66,6 +66,14 @@ back() { $ADB shell input keyevent 4; sleep 1; }
 hide_keyboard() { $ADB shell input keyevent 111; sleep 0.6; }
 
 # ---------------------------------------------------------------- first run --
+cold_start() {
+  $ADB shell am force-stop com.notely.app
+  sleep 1.5
+  $ADB shell am start -W -n com.notely.app/.MainActivity > /dev/null 2>&1 || true
+  sleep 8
+}
+
+# ---------------------------------------------------------------- first run --
 shot 01-home
 
 # Create a note and give it a title that is easy to find in later screenshots.
@@ -82,18 +90,14 @@ sleep 1.5
 shot 04-home-after-create
 
 # ------------------------------------------------- persistence after restart --
-$ADB shell am force-stop com.notely.app
-sleep 2
-$ADB shell am start -W -n com.notely.app/.MainActivity >/dev/null
-sleep 9
+cold_start
 shot 05-after-restart
 tap_text "Smoke test note"
 sleep 2.5
 shot 06-note-survived-restart
-back
-sleep 1
 
 # ------------------------------------------------------------- tabs and settings
+cold_start
 tap_text "Notebooks"
 sleep 1.5
 shot 07-notebooks
@@ -115,11 +119,9 @@ back
 tap_text "Spelling & grammar"
 sleep 1
 shot 12-spelling-settings
-back
-tap_text "Home"
-sleep 1
 
 # --------------------------------------------------------------- note options --
+cold_start
 tap_text "Welcome"
 sleep 2.5
 shot 13-seeded-note
@@ -132,14 +134,15 @@ shot 15-share-export
 tap_text "Markdown"
 sleep 5
 shot 16-android-share-sheet
-$ADB shell dumpsys activity activities 2>/dev/null | grep -E "mResumedActivity|topResumedActivity" | head -3 > "$OUT_DIR/foreground.txt" || true
-back          # dismiss the chooser
+$ADB shell dumpsys activity activities 2>/dev/null | grep -E "topResumedActivity" | head -2 > "$OUT_DIR/foreground.txt" || true
+back          # dismiss the chooser or the sheet
 sleep 1
 hide_keyboard
-back          # close the share sheet
-sleep 1
 
 # ------------------------------------------------------------- insert + tools --
+cold_start
+tap_text "Welcome"
+sleep 2.5
 tap_text "Insert content"
 sleep 1.2
 shot 17-insert-sheet
@@ -147,22 +150,22 @@ tap_text "Scan"
 sleep 1.5
 shot 18-scan-sheet
 back
-sleep 0.6
+sleep 0.8
 tap_text "Voice typing"
 sleep 2
 shot 19-voice-typing
 back
-sleep 0.6
+sleep 0.8
 tap_text "Text style"
 sleep 1.2
 shot 20-text-style
 back
-sleep 0.6
+sleep 0.8
 tap_text "Find and replace"
 sleep 1.2
 shot 21-find-replace
 back
-sleep 0.6
+sleep 0.8
 
 # ----------------------------------------------------- page setup and versions --
 tap_text "Note options"
@@ -171,14 +174,14 @@ tap_text "Page setup"
 sleep 1.2
 shot 22-page-setup
 back
-sleep 0.6
+sleep 0.8
 tap_text "Note options"
 sleep 1.2
 tap_text "Version history"
 sleep 1.2
 shot 23-version-history
 back
-sleep 0.6
+sleep 0.8
 tap_text "Note options"
 sleep 1.2
 tap_text "Comments"
@@ -187,8 +190,7 @@ shot 24-comments
 back
 
 # -------------------------------------------------------------------- search --
-$ADB shell am start -W -n com.notely.app/.MainActivity >/dev/null
-sleep 3
+cold_start
 tap_text "Search"
 sleep 1.5
 $ADB shell input text "welcome"
@@ -200,9 +202,11 @@ sleep 1
 tap_text "Home"
 sleep 1.5
 
-# Relaunch deliberately: the tab bar, the editor and the theme have all been
+# Relaunch deliberately: the tab bar, the editor and every sheet have been
 # exercised by now, so a clean start proves the app still boots and stays up.
-$ADB shell am start -W -n com.notely.app/.MainActivity >/dev/null
+$ADB shell am force-stop com.notely.app
+sleep 1.5
+$ADB shell am start -W -n com.notely.app/.MainActivity > /dev/null 2>&1 || true
 sleep 6
 shot 26-home-final
 

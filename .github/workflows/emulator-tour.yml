@@ -1,0 +1,76 @@
+name: Emulator tour (reuse a built APK)
+
+# Runs only the UI tour against an APK that a previous "Android build" run
+# already produced, so a tour fix does not cost another 25-minute Gradle build.
+#
+#   gh workflow run emulator-tour.yml -f release_tag=android-build-10
+#
+# The full pipeline (build + tour) still lives in android.yml; this workflow is
+# a fast diagnostic loop over the same script.
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Release tag that holds notely-app-release.apk (e.g. android-build-10)
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: emulator-tour
+  cancel-in-progress: true
+
+jobs:
+  tour:
+    name: Emulator smoke test and screenshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download the built APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p artifacts/android
+          gh release download "${{ inputs.release_tag }}" --pattern '*.apk' --dir artifacts/android
+          ls -la artifacts/android
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run emulator and capture screenshots
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bash scripts/android/emulator-smoke.sh artifacts/screenshots
+
+      - name: Upload screenshots and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: notely-tour-screenshots
+          path: artifacts/screenshots
+          retention-days: 14
+
+      - name: Publish screenshots to ci-artifacts
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/android/publish-evidence.sh artifacts/screenshots build/screenshots
