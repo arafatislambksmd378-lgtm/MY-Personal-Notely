@@ -1,0 +1,145 @@
+name: Android build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['arena/**']
+    paths:
+      - 'app.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'app/**'
+      - 'src/**'
+      - 'assets/**'
+      - 'scripts/android/**'
+      - '.github/workflows/android.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_OPTIONS: --max-old-space-size=4096
+
+jobs:
+  build:
+    name: Build APK and AAB
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Prepare artifact folder
+        run: mkdir -p artifacts/android
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Generate native Android project
+        run: |
+          npx expo prebuild --platform android --no-install 2>&1 | tee artifacts/android/prebuild.log
+          { echo "# generated android tree"; find android -maxdepth 3 -type f | sort | head -200; } \
+            | tee artifacts/android/android-tree.txt
+
+      - name: Configure signing
+        run: node scripts/android/configure-signing.mjs
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Build release APK and AAB
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          set -o pipefail
+          ./gradlew --no-daemon --stacktrace assembleRelease bundleRelease 2>&1 | tee ../artifacts/android/gradle.log
+
+      - name: Collect build facts
+        run: node scripts/android/build-info.mjs
+
+      - name: Upload APK and AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: notely-android
+          path: artifacts/android/*
+          retention-days: 30
+
+      - name: Attach artifacts to a GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="android-build-${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" \
+            --target "$GITHUB_SHA" \
+            --title "Notely Android build ${GITHUB_RUN_NUMBER}" \
+            --notes "Automated Android build of commit ${GITHUB_SHA}." \
+            artifacts/android/*.apk artifacts/android/*.aab || true
+          gh release view "$TAG" --json assets,url > artifacts/android/release.json || true
+
+      - name: Publish evidence to ci-artifacts
+        if: always()
+        continue-on-error: true
+        run: bash scripts/android/publish-evidence.sh artifacts android
+
+  emulator:
+    name: Emulator smoke test and screenshots
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download APK
+        uses: actions/download-artifact@v4
+        with:
+          name: notely-android
+          path: artifacts/android
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run emulator and capture screenshots
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bash scripts/android/emulator-smoke.sh artifacts/screenshots
+
+      - name: Upload screenshots and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: notely-android-screenshots
+          path: artifacts/screenshots
+          retention-days: 30
+
+      - name: Publish screenshots to ci-artifacts
+        if: always()
+        continue-on-error: true
+        run: bash scripts/android/publish-evidence.sh artifacts/screenshots screenshots
