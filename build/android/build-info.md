@@ -1,8 +1,8 @@
 # Android build
 
-- Generated: 2026-11-22T13:20:47.894Z
-- Commit: `bcc3ed8ddfc38a5c14320909b185aa6404976157`
-- Workflow run: https://github.com/arafatislambksmd378-lgtm/MY-Personal-Notely/actions/runs/45025565454
+- Generated: 2026-11-24T09:30:07.256Z
+- Commit: `d97c22ad810d9f734ea6109a235c19b0a604ecd4`
+- Workflow run: https://github.com/arafatislambksmd378-lgtm/MY-Personal-Notely/actions/runs/45362748597
 - Signing: debug keystore (Expo template default)
 - Java: openjdk version "17.0.21" 2026-10-20
 - Node: v22.23.5
@@ -10,5 +10,5 @@
 
 | Artifact | Size | SHA-256 |
 | --- | --- | --- |
-| APK `notely-app-release.apk` | 140.5 MB | `a2a67fd6015cde8e8fdaef104f086aac94d64919b3ab9ce3d803e99119cf45a0` |
-| AAB `notely-app-release.aab` | 86.3 MB | `2ef7eaaf1429a7770ad2428dd2b51f3387a6ba364d3a457736a86ac333aaaf14` |
+| APK `notely-app-release.apk` | 140.6 MB | `9d1a3d4fb5e37412aea1e7a12c92a9a6815bd8155425791700880426e9104261` |
+| AAB `notely-app-release.aab` | 86.3 MB | `e37d62842645f81336ce11c90fb83bdfc0d7addd99efa01f63e7acb5ec3500c7` |
