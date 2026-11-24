@@ -1,8 +1,10 @@
 /**
  * Home screen.
  *
- * Reference layout: greeting + pencil FAB, search field, horizontal notebook
- * tiles, then recent-note cards with a floating "+" action.
+ * Reference layout: greeting header, search field, horizontal notebook tiles,
+ * then a two-column grid of note cards. The primary creation action is the
+ * purple rounded-square "+" floating action button in the bottom-right corner,
+ * above the bottom navigation bar.
  */
 import { useCallback, useMemo, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
@@ -26,6 +28,40 @@ import { pluralize } from '@/utils/text';
 import { spacing } from '@/design/tokens';
 import { toast } from '@/store/useToastStore';
 import { logEvent } from '@/db/repositories/events';
+import type { DocumentSummary } from '@/types/models';
+import { chunkIntoRows } from '@/utils/grid';
+
+/** Space between cards in the two-column grid. */
+const GRID_GAP = spacing.md;
+
+/**
+ * Two equal-width cards per row, wrapping onto subsequent rows.
+ *
+ * Chunking into explicit rows (instead of `flexWrap` + percentage widths) keeps
+ * both cards in a row at exactly the same width at every screen size, and the
+ * trailing spacer keeps an odd final card from stretching to full width.
+ */
+function NoteGrid({ notes, onOpen }: { notes: DocumentSummary[]; onOpen: (note: DocumentSummary) => void }) {
+  const rows = useMemo(() => chunkIntoRows(notes, 2), [notes]);
+
+  return (
+    <View style={styles.grid} testID="home-note-grid">
+      {rows.map((row, rowIndex) => (
+        <View key={row[0]?.id ?? `row-${rowIndex}`} style={styles.gridRow}>
+          {row.map((note) => (
+            <NoteCard
+              key={note.id}
+              note={note}
+              style={styles.gridCard}
+              onPress={() => onOpen(note)}
+            />
+          ))}
+          {row.length === 1 ? <View style={styles.gridSpacer} /> : null}
+        </View>
+      ))}
+    </View>
+  );
+}
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -61,6 +97,13 @@ export default function HomeScreen() {
     }
   }, [createNote, router]);
 
+  const openNote = useCallback(
+    (note: DocumentSummary) => {
+      router.push({ pathname: '/note/[id]', params: { id: note.id } });
+    },
+    [router],
+  );
+
   const recentToShow = useMemo(() => {
     const hidden = new Set(pinned.map((note) => note.id));
     const merged = [...recent.filter((note) => !hidden.has(note.id))];
@@ -76,117 +119,110 @@ export default function HomeScreen() {
         footer={null}
         scroll={false}
       >
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scroll}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
-        >
-          <View style={styles.header}>
-            <View style={styles.headerText}>
-              <AppText variant="caption" tone="muted">
-                {formatHeaderDate()}
-              </AppText>
-              <AppText variant="display" style={{ marginTop: 2 }}>
-                {greeting()}
-              </AppText>
-              <AppText variant="display">{userName}</AppText>
+        <View style={styles.content}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scroll}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
+          >
+            <View style={styles.header}>
+              <View style={styles.headerText}>
+                <AppText variant="caption" tone="muted">
+                  {formatHeaderDate()}
+                </AppText>
+                <AppText variant="display" style={{ marginTop: 2 }}>
+                  {greeting()}
+                </AppText>
+                <AppText variant="display">{userName}</AppText>
+              </View>
             </View>
-            <Fab onPress={startNote} accessibilityLabel="Create a new note" testID="home-new-note" />
-          </View>
 
-          <SearchBar onPress={() => router.push('/search')} editable={false} placeholder="Search notes, tables, ideas…" />
+            <SearchBar onPress={() => router.push('/search')} editable={false} placeholder="Search notes, tables, ideas…" />
 
-          {!hasContent ? (
-            <EmptyState
-              title="Your notebook is empty"
-              message="Create your first note to see it here, or add a notebook to organise your work."
-              icon="sparkles-outline"
-              actionLabel="Create a note"
-              onAction={startNote}
-            />
-          ) : null}
-
-          {notebooks.length > 0 ? (
-            <>
-              <SectionHeader
-                title="Notebooks"
-                actionLabel="See all"
-                onAction={() => router.push('/notebooks')}
-                style={{ marginTop: spacing.xxl }}
+            {!hasContent ? (
+              <EmptyState
+                title="Your notebook is empty"
+                message="Create your first note to see it here, or add a notebook to organise your work."
+                icon="sparkles-outline"
+                actionLabel="Create a note"
+                onAction={startNote}
               />
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.horizontal}
-              >
-                {notebooks.map((notebook) => (
-                  <NotebookCard
-                    key={notebook.id}
-                    notebook={notebook}
-                    onPress={() => router.push({ pathname: '/notebook/[id]', params: { id: notebook.id } })}
-                  />
-                ))}
-                <View style={styles.addCard}>
-                  <Button label="New" variant="secondary" size="sm" icon="add" onPress={() => setNewNotebookOpen(true)} />
-                </View>
-              </ScrollView>
-            </>
-          ) : null}
+            ) : null}
 
-          {pinned.length > 0 && recentToShow.length > 0 ? (
-            <SectionHeader title="Pinned" style={{ marginTop: spacing.xxl }} />
-          ) : null}
-
-          {pinned.length > 0 && recentToShow.length > 0 ? (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontal}>
-              {pinned.map((note) => (
-                <NoteCard
-                  key={note.id}
-                  note={note}
-                  onPress={() => router.push({ pathname: '/note/[id]', params: { id: note.id } })}
+            {notebooks.length > 0 ? (
+              <>
+                <SectionHeader
+                  title="Notebooks"
+                  actionLabel="See all"
+                  onAction={() => router.push('/notebooks')}
+                  style={{ marginTop: spacing.xxl }}
                 />
-              ))}
-            </ScrollView>
-          ) : null}
-
-          {recent.length > 0 ? (
-            <>
-              <SectionHeader
-                title="Recent notes"
-                actionLabel="See all"
-                onAction={() => router.push({ pathname: '/collection/[kind]', params: { kind: 'all' } })}
-                style={{ marginTop: spacing.xxl }}
-              />
-              <View>
                 <ScrollView
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={styles.horizontal}
                 >
-                  {recentToShow.map((note) => (
-                    <NoteCard
-                      key={note.id}
-                      note={note}
-                      onPress={() => router.push({ pathname: '/note/[id]', params: { id: note.id } })}
+                  {notebooks.map((notebook) => (
+                    <NotebookCard
+                      key={notebook.id}
+                      notebook={notebook}
+                      onPress={() => router.push({ pathname: '/notebook/[id]', params: { id: notebook.id } })}
                     />
                   ))}
+                  <View style={styles.addCard}>
+                    <Button label="New" variant="secondary" size="sm" icon="add" onPress={() => setNewNotebookOpen(true)} />
+                  </View>
                 </ScrollView>
-              </View>
-            </>
-          ) : null}
+              </>
+            ) : null}
 
-          {hasContent ? (
-            <View style={[styles.summary, { backgroundColor: colors.surfaceMuted, borderColor: colors.border }]}>
-              <AppText variant="caption" tone="secondary">
-                {pluralize(stats.notes, 'note')} · {pluralize(stats.notebooks, 'notebook')} ·{' '}
-                {stats.words.toLocaleString()} words
-              </AppText>
-              <AppText variant="label" tone="muted" style={{ marginTop: 2 }}>
-                Stored locally on this device
-              </AppText>
-            </View>
-          ) : null}
-        </ScrollView>
+            {pinned.length > 0 && recentToShow.length > 0 ? (
+              <SectionHeader title="Pinned" style={{ marginTop: spacing.xxl }} />
+            ) : null}
+
+            {pinned.length > 0 && recentToShow.length > 0 ? (
+              <NoteGrid notes={pinned} onOpen={openNote} />
+            ) : null}
+
+            {recent.length > 0 ? (
+              <>
+                <SectionHeader
+                  title="Recent notes"
+                  actionLabel="See all"
+                  onAction={() => router.push({ pathname: '/collection/[kind]', params: { kind: 'all' } })}
+                  style={{ marginTop: spacing.xxl }}
+                />
+                <NoteGrid notes={recentToShow} onOpen={openNote} />
+              </>
+            ) : null}
+
+            {hasContent ? (
+              <View style={[styles.summary, { backgroundColor: colors.surfaceMuted, borderColor: colors.border }]}>
+                <AppText variant="caption" tone="secondary">
+                  {pluralize(stats.notes, 'note')} · {pluralize(stats.notebooks, 'notebook')} ·{' '}
+                  {stats.words.toLocaleString()} words
+                </AppText>
+                <AppText variant="label" tone="muted" style={{ marginTop: 2 }}>
+                  Stored locally on this device
+                </AppText>
+              </View>
+            ) : null}
+          </ScrollView>
+
+          {/* Creation action: fixed above the bottom navigation bar, clear of the
+              Android gesture inset because the tab bar already consumes it. */}
+          <View pointerEvents="box-none" style={styles.fabLayer}>
+            <Fab
+              onPress={startNote}
+              shape="rounded"
+              icon="add"
+              size={68}
+              radius={22}
+              accessibilityLabel="Create a new note"
+              testID="home-new-note"
+            />
+          </View>
+        </View>
       </Screen>
 
       <PromptDialog
@@ -206,11 +242,23 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingBottom: spacing.xxxl },
+  content: { flex: 1 },
+  // Room at the bottom so the floating "+" never covers the summary card.
+  scroll: { paddingBottom: 120 },
   header: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: spacing.md },
   headerText: { flex: 1 },
   horizontal: { gap: spacing.md, paddingVertical: spacing.xs, paddingRight: spacing.lg },
   addCard: { justifyContent: 'center' },
+  grid: { gap: GRID_GAP },
+  gridRow: { flexDirection: 'row', gap: GRID_GAP, alignItems: 'stretch' },
+  gridCard: { flex: 1, minWidth: 0 },
+  gridSpacer: { flex: 1 },
+  fabLayer: {
+    position: 'absolute',
+    right: 0,
+    bottom: spacing.lg,
+    alignItems: 'flex-end',
+  },
   summary: {
     marginTop: spacing.xxl,
     borderRadius: 18,

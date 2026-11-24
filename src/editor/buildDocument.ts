@@ -76,24 +76,6 @@ export function buildEditorDocument(options: EditorDocumentOptions): string {
       <span id="page-number" style="display:${setup.pageNumbers ? 'inline' : 'none'}">Page 1</span>
     </div>
   </div>
-  <div id="drawing-overlay">
-    <div id="drawing-sheet">
-      <div id="drawing-title">Sketch</div>
-      <div id="drawing-canvas-wrap"><canvas id="drawing-canvas"></canvas></div>
-      <div id="drawing-controls">
-        <div id="drawing-colors">
-          <button class="swatch active" style="background:#151223" data-color="#151223" aria-label="Ink"></button>
-          <button class="swatch" style="background:#7C3AED" data-color="#7C3AED" aria-label="Purple"></button>
-          <button class="swatch" style="background:#2563EB" data-color="#2563EB" aria-label="Blue"></button>
-          <button class="swatch" style="background:#059669" data-color="#059669" aria-label="Green"></button>
-          <button class="swatch" style="background:#EF4444" data-color="#EF4444" aria-label="Red"></button>
-        </div>
-        <button id="drawing-clear" class="d-btn">Clear</button>
-        <button id="drawing-cancel" class="d-btn">Cancel</button>
-        <button id="drawing-insert" class="d-btn">Insert</button>
-      </div>
-    </div>
-  </div>
   <script>${EDITOR_SCRIPT}</script>
 </body>
 </html>`;

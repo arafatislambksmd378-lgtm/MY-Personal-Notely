@@ -14,7 +14,6 @@ export const EDITOR_SCRIPT = `
   var footer = document.getElementById('page-footer');
   var footerText = document.getElementById('page-footer-text');
   var pageNumber = document.getElementById('page-number');
-  var overlay = document.getElementById('drawing-overlay');
   var HOST = window.ReactNativeWebView ? 'rn' : 'web';
   var changeTimer = null;
   var lastSentHtml = editor.innerHTML;
@@ -333,99 +332,6 @@ export const EDITOR_SCRIPT = `
     else document.documentElement.classList.remove('dark');
   }
 
-  /* ---------------- drawing pad ---------------- */
-  var canvas = document.getElementById('drawing-canvas');
-  var context = canvas.getContext('2d');
-  var drawing = false;
-  var brushColor = '#151223';
-  var brushSize = 3;
-  var strokeStarted = false;
-
-  function sizeCanvas() {
-    var ratio = window.devicePixelRatio || 1;
-    var rect = canvas.getBoundingClientRect();
-    if (canvas.width !== Math.round(rect.width * ratio) || canvas.height !== Math.round(rect.height * ratio)) {
-      var snapshot = canvas.width > 0 ? canvas.toDataURL() : null;
-      canvas.width = Math.round(rect.width * ratio);
-      canvas.height = Math.round(rect.height * ratio);
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      context.fillStyle = '#FFFFFF';
-      context.fillRect(0, 0, rect.width, rect.height);
-      context.lineCap = 'round';
-      context.lineJoin = 'round';
-      if (snapshot) {
-        var img = new Image();
-        img.onload = function () { context.drawImage(img, 0, 0, rect.width, rect.height); };
-        img.src = snapshot;
-      }
-    }
-  }
-
-  function pointFrom(event) {
-    var rect = canvas.getBoundingClientRect();
-    var touch = event.touches && event.touches[0];
-    var clientX = touch ? touch.clientX : event.clientX;
-    var clientY = touch ? touch.clientY : event.clientY;
-    return { x: clientX - rect.left, y: clientY - rect.top };
-  }
-
-  function startStroke(event) {
-    event.preventDefault();
-    sizeCanvas();
-    drawing = true;
-    strokeStarted = true;
-    var point = pointFrom(event);
-    context.strokeStyle = brushColor;
-    context.lineWidth = brushSize;
-    context.beginPath();
-    context.moveTo(point.x, point.y);
-  }
-  function moveStroke(event) {
-    if (!drawing) return;
-    event.preventDefault();
-    var point = pointFrom(event);
-    context.lineTo(point.x, point.y);
-    context.stroke();
-  }
-  function endStroke(event) {
-    if (!drawing) return;
-    if (event && event.preventDefault) event.preventDefault();
-    drawing = false;
-    context.closePath();
-  }
-
-  canvas.addEventListener('mousedown', startStroke);
-  canvas.addEventListener('mousemove', moveStroke);
-  window.addEventListener('mouseup', endStroke);
-  canvas.addEventListener('touchstart', startStroke, { passive: false });
-  canvas.addEventListener('touchmove', moveStroke, { passive: false });
-  canvas.addEventListener('touchend', endStroke, { passive: false });
-
-  var swatches = document.querySelectorAll('#drawing-colors .swatch');
-  for (var s = 0; s < swatches.length; s += 1) {
-    swatches[s].addEventListener('click', function (event) {
-      brushColor = event.currentTarget.getAttribute('data-color');
-      for (var k = 0; k < swatches.length; k += 1) swatches[k].classList.remove('active');
-      event.currentTarget.classList.add('active');
-    });
-  }
-  document.getElementById('drawing-clear').addEventListener('click', function () {
-    var rect = canvas.getBoundingClientRect();
-    context.fillStyle = '#FFFFFF';
-    context.fillRect(0, 0, rect.width, rect.height);
-  });
-  document.getElementById('drawing-cancel').addEventListener('click', function () {
-    overlay.classList.remove('open');
-  });
-  document.getElementById('drawing-insert').addEventListener('click', function () {
-    if (!strokeStarted) { overlay.classList.remove('open'); return; }
-    var dataUrl = canvas.toDataURL('image/png');
-    insertImage(dataUrl, 'Sketch');
-    post({ type: 'media', kind: 'drawing', dataUri: dataUrl, bytes: Math.round(dataUrl.length * 0.75) });
-    overlay.classList.remove('open');
-    strokeStarted = false;
-  });
-
   /* ---------------- host messages ---------------- */
   function handle(message) {
     switch (message.type) {
@@ -474,10 +380,6 @@ export const EDITOR_SCRIPT = `
       case 'scroll-to-anchor':
         var anchor = document.getElementById(message.anchor);
         if (anchor && anchor.scrollIntoView) anchor.scrollIntoView({ block: 'center', behavior: 'smooth' });
-        break;
-      case 'open-drawing':
-        overlay.classList.add('open');
-        setTimeout(sizeCanvas, 30);
         break;
       default: break;
     }

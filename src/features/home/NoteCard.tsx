@@ -2,7 +2,7 @@
  * Recent-note card: coloured header band + title + excerpt, with a pin glyph
  * for pinned notes (matches the "Welcome to Notely" card in the reference).
  */
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { AppText } from '@/components/AppText';
@@ -15,9 +15,15 @@ interface NoteCardProps {
   note: DocumentSummary;
   onPress: () => void;
   variant?: 'card' | 'row';
+  /**
+   * Layout override. The Home grid passes `{ flex: 1, minWidth: 0 }` so two
+   * cards always share a row at equal width; the default fixed width is kept
+   * for any remaining horizontal use.
+   */
+  style?: StyleProp<ViewStyle>;
 }
 
-export function NoteCard({ note, onPress, variant = 'card' }: NoteCardProps) {
+export function NoteCard({ note, onPress, variant = 'card', style }: NoteCardProps) {
   const colors = useColors();
 
   if (variant === 'row') {
@@ -71,6 +77,7 @@ export function NoteCard({ note, onPress, variant = 'card' }: NoteCardProps) {
         styles.card,
         shadows.card,
         { backgroundColor: colors.surface, borderColor: colors.border, opacity: pressed ? 0.94 : 1 },
+        style,
       ]}
     >
       <LinearGradient
@@ -106,6 +113,7 @@ export function NoteCard({ note, onPress, variant = 'card' }: NoteCardProps) {
 const styles = StyleSheet.create({
   card: {
     width: layout.recentCardWidth,
+    minWidth: 0,
     borderRadius: radii.lg,
     borderWidth: StyleSheet.hairlineWidth * 2,
     overflow: 'hidden',

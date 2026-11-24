@@ -80,7 +80,6 @@ export type HostMessage =
   | { type: 'focus' }
   | { type: 'blur' }
   | { type: 'set-page-setup'; pageSetup: string; fontScale?: number }
-  | { type: 'open-drawing' }
   | { type: 'request-selection' }
   | { type: 'scroll-to-anchor'; anchor: string }
   | { type: 'set-theme'; dark: boolean };

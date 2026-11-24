@@ -46,3 +46,6 @@ artifacts/
 
 # Agent scratch space
 .arena/
+
+# Baseline snapshot (Phase 01) — preserved locally, never committed
+baseline/

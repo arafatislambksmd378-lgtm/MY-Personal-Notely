@@ -62,6 +62,7 @@ import { addBookmark } from '@/db/repositories/bookmarks';
 import { countComments } from '@/db/repositories/comments';
 import { recordMediaAsset } from '@/db/repositories/media';
 import { logEvent } from '@/db/repositories/events';
+import { useDrawingStore } from '@/features/drawing/useDrawingStore';
 import { pickImage } from '@/services/media';
 import { createId } from '@/utils/id';
 import { readingMinutes, countOccurrences } from '@/utils/text';
@@ -255,6 +256,27 @@ export default function NoteEditorScreen() {
     editorRef.current?.send(message);
   }, []);
 
+  /**
+   * A drawing comes back from the full-screen editor through the store, not
+   * through navigation params (the payload can be hundreds of kilobytes).
+   * Inserting through `insertImage` keeps the existing note-saving path: the
+   * editor emits `change`, autosave persists the HTML, and the image stays in
+   * the document when the note is reopened.
+   */
+  const pendingDrawing = useDrawingStore((state) => state.pending);
+
+  useEffect(() => {
+    if (!pendingDrawing || pendingDrawing.noteId !== id || !doc) return;
+    send({ type: 'insertImage', src: pendingDrawing.dataUri, alt: 'Drawing' });
+    void recordMediaAsset({
+      documentId: pendingDrawing.noteId,
+      kind: 'drawing',
+      uri: pendingDrawing.dataUri,
+      byteSize: pendingDrawing.bytes,
+    });
+    useDrawingStore.getState().clear(pendingDrawing.noteId);
+  }, [doc, id, pendingDrawing, send]);
+
   const onTitleChange = useCallback(
     (value: string) => {
       setTitle(value);
@@ -316,7 +338,10 @@ export default function NoteEditorScreen() {
           openSheet('table');
           break;
         case 'drawing':
-          send({ type: 'open-drawing' });
+          // Full-screen editor instead of the old in-editor bottom sheet.
+          if (doc) {
+            router.push({ pathname: '/drawing', params: { noteId: doc.id, mode: 'drawing' } });
+          }
           break;
         case 'chart':
           openSheet('chart');
@@ -353,7 +378,7 @@ export default function NoteEditorScreen() {
           break;
       }
     },
-    [closeSheet, openSheet, send],
+    [closeSheet, doc, openSheet, router, send],
   );
 
   const handleNoteOption = useCallback(

@@ -12,13 +12,14 @@ export type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 interface IconTileProps {
   name: IoniconName;
   accent?: AccentName;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'compact' | 'md' | 'lg' | 'xl';
   style?: ViewStyle;
   filled?: boolean;
 }
 
 const SIZES = {
   sm: { box: 32, icon: 15, radius: radii.sm },
+  compact: { box: 36, icon: 18, radius: 13 },
   md: { box: 40, icon: 19, radius: radii.md },
   lg: { box: 48, icon: 23, radius: radii.md + 2 },
   xl: { box: 56, icon: 27, radius: radii.lg },

@@ -67,6 +67,40 @@ The editor never touches the database. `app/note/[id].tsx` translates messages i
 autosave payloads, media records and UI state; `useAutosave` debounces writes, flushes on
 unmount/background, and retries with the payload intact on failure.
 
+## Drawing editor
+
+Drawing and sketching run in a dedicated full-screen route (`app/drawing.tsx`) rather
+than inside the document, so the canvas gets the whole screen and the editor's own
+WebView is untouched.
+
+The surface is a second self-contained HTML document
+(`src/features/drawing/drawingDocument.ts` + `drawingScript.ts`) hosted by
+`DrawingCanvas.native.tsx` (WebView) or `DrawingCanvas.tsx` (iframe) — the same split as
+the rich-text editor, and the reason no drawing library is needed. It is a *vector*
+engine:
+
+- every item is stored in normalised 0…1 coordinates, so orientation changes and
+  resizes re-render the same vectors instead of stretching a bitmap;
+- strokes and shapes are objects, which is what makes select / move / resize / recolour /
+  fill / delete possible;
+- undo/redo are snapshots of the item list (cheap, and immune to the bugs that
+  incremental undo stacks produce mid-gesture);
+- input uses Pointer Events with `touch-action: none`, so finger, stylus and mouse work.
+
+```
+host → canvas    set-tool, set-color, set-width, set-stabilization, arm-shape,
+                 disarm-shape, set-fill, undo, redo, clear, delete-selected, export
+canvas → host    ready, state {tool, canUndo, canRedo, hasContent, selection, armedShape},
+                 exported {dataUri, empty, bytes}, error
+```
+
+On **Insert** the canvas rasterises to a capped-resolution PNG and posts it back. The
+route publishes `{noteId, dataUri, bytes}` to `useDrawingStore`, pops to the note, and
+`app/note/[id].tsx` inserts it through the editor's existing `insertImage` command — so
+the drawing lands at the caret, flows through the normal `change` → autosave path, and
+stays in the document when the note is reopened. The note editor never has to know how
+the drawing was produced.
+
 ## Export & import
 
 Export is a pure pipeline: `buildExport(document, format)` → `{fileName, mimeType, data}`.
@@ -156,6 +190,8 @@ tests are byte-for-byte the same code as native.
 | `schema.test.ts` | node + sql.js | migrations, constraints, indexes, FTS triggers |
 | `repositories.test.ts` | node + sql.js | CRUD, trash/purge, search, versions, stats, events |
 | `editor.test.ts` | jsdom | the shipped editor shell: sanitisation, tables, TOC, footnotes, find/replace, page setup |
+| `drawing.test.ts` | jsdom | the shipped drawing canvas: strokes, every shape, undo/redo, selection, fill, delete, resize, export |
+| `grid.test.ts` | node | Insert-sheet and Home-grid width arithmetic, row chunking |
 | `export.test.ts` | node | every format, ZIP structure (OOXML/ODF), images, file names |
 | `import.test.ts` | node | Markdown/DOCX/ODT round trips, sanitisation, error messages |
 | `backup.test.ts` | node + sql.js | counts, merge/replace, malformed input, archive round trip |

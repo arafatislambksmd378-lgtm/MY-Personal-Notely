@@ -123,37 +123,11 @@ export const EDITOR_CSS = `
   .notely-bookmark-target { scroll-margin-top: 24px; }
   ::highlight(notely-find) { background: rgba(245, 165, 36, 0.42); color: inherit; }
   .misspelled { text-decoration: underline wavy #EF4444; text-decoration-skip-ink: none; }
-  #drawing-overlay {
-    position: fixed; inset: 0; background: rgba(21, 18, 35, 0.55);
-    display: none; align-items: flex-end; z-index: 50;
-  }
-  #drawing-overlay.open { display: flex; }
-  #drawing-sheet {
-    background: #FFFFFF; width: 100%; border-radius: 24px 24px 0 0; padding: 14px 16px 20px;
-    box-shadow: 0 -8px 30px rgba(21, 18, 35, 0.22);
-  }
-  #drawing-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
-  #drawing-canvas-wrap { background: #FFFFFF; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
-  #drawing-canvas { display: block; width: 100%; height: 300px; touch-action: none; cursor: crosshair; }
-  #drawing-controls { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
-  #drawing-colors { display: flex; gap: 8px; flex: 1; }
-  .swatch { width: 24px; height: 24px; border-radius: 12px; border: 2px solid transparent; }
-  .swatch.active { border-color: #151223; }
-  .d-btn {
-    border: none; border-radius: 12px; padding: 10px 16px; font-size: 13px; font-weight: 700;
-    font-family: var(--editor-font);
-  }
-  #drawing-clear { background: #F1EFF8; color: #67647A; }
-  #drawing-insert { background: var(--accent); color: #FFFFFF; }
   .dark { --canvas: #100D18; --page: #181424; --ink: #F6F4FF; --muted: #AFABC2; --border: #2B2540; }
   .dark #page { box-shadow: 0 6px 24px rgba(0,0,0,0.45); }
-  .dark #drawing-sheet { background: #181424; color: #F6F4FF; }
-  .dark #drawing-canvas-wrap { background: #100D18; }
   .dark #editor pre { background: rgba(255,255,255,0.08); }
-  .dark #drawing-clear { background: #2A2440; color: #AFABC2; }
   @media print {
     body { padding: 0; background: #FFFFFF; }
     #page { box-shadow: none; border-radius: 0; max-width: none; width: 100%; min-height: 0; }
-    #drawing-overlay { display: none !important; }
   }
 `;
