@@ -1,4 +1,5 @@
 /** Friendly empty state used by every list screen. */
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { AppText } from './AppText';
 import { IconTile, type IoniconName } from './IconTile';
@@ -15,7 +16,7 @@ interface EmptyStateProps {
   onAction?: () => void;
 }
 
-export function EmptyState({ title, message, icon = 'document-text-outline', accent = 'purple', actionLabel, onAction }: EmptyStateProps) {
+export const EmptyState = React.memo(function EmptyState({ title, message, icon = 'document-text-outline', accent = 'purple', actionLabel, onAction }: EmptyStateProps) {
   return (
     <View style={styles.wrapper}>
       <IconTile name={icon} accent={accent} size="xl" />
@@ -30,7 +31,7 @@ export function EmptyState({ title, message, icon = 'document-text-outline', acc
       ) : null}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   wrapper: { alignItems: 'center', paddingVertical: spacing.xxxl, gap: spacing.xs },

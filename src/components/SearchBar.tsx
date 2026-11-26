@@ -1,4 +1,5 @@
 /** Rounded search field from the Home screen. */
+import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useColors } from '@/store/useSettingsStore';
@@ -16,7 +17,7 @@ interface SearchBarProps {
   testID?: string;
 }
 
-export function SearchBar({
+export const SearchBar = React.memo(function SearchBar({
   value,
   placeholder = 'Search notes, tables, ideas…',
   onChangeText,
@@ -59,7 +60,7 @@ export function SearchBar({
     );
   }
   return body;
-}
+});
 
 const styles = StyleSheet.create({
   wrapper: {

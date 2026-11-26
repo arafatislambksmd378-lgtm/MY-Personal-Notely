@@ -316,7 +316,9 @@ export default function NoteEditorScreen() {
           openSheet('table');
           break;
         case 'drawing':
-          send({ type: 'open-drawing' });
+          if (id) {
+            router.push({ pathname: '/drawing/[noteId]', params: { noteId: id } });
+          }
           break;
         case 'chart':
           openSheet('chart');

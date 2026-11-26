@@ -137,6 +137,7 @@ export default function RootLayout() {
           <Stack screenOptions={headerOptions}>
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="note/[id]" />
+            <Stack.Screen name="drawing/[noteId]" />
             <Stack.Screen name="notebook/[id]" />
             <Stack.Screen name="search" />
             <Stack.Screen name="collection/[kind]" />

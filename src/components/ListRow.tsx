@@ -1,4 +1,5 @@
 /** Icon + title + subtitle + trailing slot, used by settings, notebooks and sheets. */
+import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 import type { ReactNode } from 'react';
@@ -22,7 +23,7 @@ interface ListRowProps {
   testID?: string;
 }
 
-export function ListRow({
+export const ListRow = React.memo(function ListRow({
   title,
   subtitle,
   icon,
@@ -71,7 +72,7 @@ export function ListRow({
       {content}
     </Pressable>
   );
-}
+});
 
 const styles = StyleSheet.create({
   wrapper: { borderRadius: radii.lg, paddingHorizontal: spacing.lg, paddingVertical: spacing.md + 2 },

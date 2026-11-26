@@ -24,7 +24,7 @@ const SIZES: { label: string; value: string }[] = [
   { label: 'X-Large', value: '23px' },
 ];
 
-const TEXT_COLORS = ['#151223', '#7C3AED', '#2563EB', '#059669', '#D97706', '#DC2626', '#DB2777', '#0D9488'];
+const TEXT_COLORS = ['#24232B', '#8950F5', '#438CEB', '#39B980', '#F2C94C', '#EF4444', '#EC4899', '#14B8A6'];
 const HIGHLIGHTS = ['#FEF08A', '#D9F99D', '#BFDBFE', '#FBCFE8', '#FDE68A', '#E9D5FF'];
 
 interface TextStyleSheetProps {

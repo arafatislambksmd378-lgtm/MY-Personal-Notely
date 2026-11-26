@@ -19,10 +19,10 @@ export type AccentName =
 
 /** Accent palette used by notebook cards, note card colors and icon tiles. */
 export const accents: Record<AccentName, string> = {
-  purple: '#7C3AED',
-  blue: '#3B82F6',
-  green: '#12B76A',
-  amber: '#F5A524',
+  purple: '#8950F5',
+  blue: '#438CEB',
+  green: '#39B980',
+  amber: '#F2C94C',
   pink: '#EC4899',
   teal: '#14B8A6',
   orange: '#F97316',
@@ -43,7 +43,7 @@ export const cardColorOrder: AccentName[] = [
 
 /** Soft tinted backgrounds used behind icons (reference: 8-14% accent alpha). */
 export const accentSoft: Record<AccentName, string> = {
-  purple: '#EFE8FF',
+  purple: '#F0E9FF',
   blue: '#E4EEFF',
   green: '#E1F8EE',
   amber: '#FEF1D8',
@@ -55,7 +55,7 @@ export const accentSoft: Record<AccentName, string> = {
 
 /** Gradient pairs used by the settings hero card and recent-note headers. */
 export const accentGradient: Record<AccentName, [string, string]> = {
-  purple: ['#8B5CF6', '#6D28D9'],
+  purple: ['#8950F5', '#7040E8'],
   blue: ['#60A5FA', '#2563EB'],
   green: ['#34D399', '#059669'],
   amber: ['#FBBF24', '#D97706'],
@@ -67,29 +67,29 @@ export const accentGradient: Record<AccentName, [string, string]> = {
 
 export const lightColors = {
   scheme: 'light' as const,
-  canvas: '#F7F6FB',
-  canvasElevated: '#FFFFFF',
+  canvas: '#FFFFFF',
+  canvasElevated: '#F8F7FB',
   surface: '#FFFFFF',
   surfaceMuted: '#F1EFF8',
   surfaceSunken: '#EDEAF6',
-  border: '#ECE9F4',
+  border: '#ECEAF1',
   borderStrong: '#DFDBEC',
-  text: '#151223',
-  textSecondary: '#67647A',
+  text: '#24232B',
+  textSecondary: '#92909D',
   textMuted: '#9C99AC',
   textInverse: '#FFFFFF',
-  primary: '#7C3AED',
-  primaryPressed: '#6D28D9',
-  primarySoft: '#EFE8FF',
+  primary: '#8950F5',
+  primaryPressed: '#7040E8',
+  primarySoft: '#F0E9FF',
   onPrimary: '#FFFFFF',
   danger: '#EF4444',
   dangerSoft: '#FEE7E7',
-  success: '#12B76A',
-  warning: '#F5A524',
-  info: '#3B82F6',
+  success: '#39B980',
+  warning: '#F2C94C',
+  info: '#438CEB',
   overlay: 'rgba(20, 16, 35, 0.45)',
   switchTrack: '#D9D5E8',
-  switchTrackOn: '#7C3AED',
+  switchTrackOn: '#8950F5',
   switchThumb: '#FFFFFF',
   editorSurface: '#FFFFFF',
   tabBar: '#FFFFFF',

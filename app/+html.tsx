@@ -17,7 +17,7 @@ export default function Root({ children }: PropsWithChildren) {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
         />
-        <meta name="theme-color" content="#F7F6FB" />
+        <meta name="theme-color" content="#FFFFFF" />
         <meta
           name="description"
           content="Notely — an offline-first smart notebook and document editor."
@@ -34,8 +34,8 @@ export default function Root({ children }: PropsWithChildren) {
 
 const GLOBAL_CSS = `
   html, body, #root { height: 100%; }
-  body { background-color: #F7F6FB; overscroll-behavior-y: none; }
+  body { background-color: #FFFFFF; overscroll-behavior-y: none; }
   /* Match the app's font while custom fonts are still loading. */
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-  ::selection { background: rgba(124, 58, 237, 0.22); }
+  ::selection { background: rgba(137, 80, 245, 0.22); }
 `;

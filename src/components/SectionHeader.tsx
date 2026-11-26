@@ -1,4 +1,5 @@
 /** Section title with optional trailing action (reference: "Notebooks" / "See all"). */
+import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import type { ReactNode } from 'react';
 import { AppText } from './AppText';
@@ -14,7 +15,7 @@ interface SectionHeaderProps {
   style?: object;
 }
 
-export function SectionHeader({ title, actionLabel, onAction, right, overline, style }: SectionHeaderProps) {
+export const SectionHeader = React.memo(function SectionHeader({ title, actionLabel, onAction, right, overline, style }: SectionHeaderProps) {
   const colors = useColors();
   return (
     <View style={[styles.row, style]}>
@@ -31,7 +32,7 @@ export function SectionHeader({ title, actionLabel, onAction, right, overline, s
       ) : null}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   row: {

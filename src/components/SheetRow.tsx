@@ -3,6 +3,7 @@
  * pattern of the note options reference: 40pt tinted icon, label, optional
  * value, chevron.
  */
+import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet } from 'react-native';
 import type { ReactNode } from 'react';
@@ -24,7 +25,7 @@ interface SheetRowProps {
   testID?: string;
 }
 
-export function SheetRow({
+export const SheetRow = React.memo(function SheetRow({
   label,
   icon,
   accent = 'purple',
@@ -62,7 +63,7 @@ export function SheetRow({
       {showChevron ? <Ionicons name="chevron-forward" size={16} color={colors.textMuted} /> : null}
     </Pressable>
   );
-}
+});
 
 const styles = StyleSheet.create({
   row: {

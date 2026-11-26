@@ -2,6 +2,7 @@
  * Soft-squared icon container from the reference screens
  * (10% accent background + accent glyph).
  */
+import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, View, type ViewStyle } from 'react-native';
 import { accentSoft, radii, type AccentName } from '@/design/tokens';
@@ -24,7 +25,7 @@ const SIZES = {
   xl: { box: 56, icon: 27, radius: radii.lg },
 } as const;
 
-export function IconTile({ name, accent = 'purple', size = 'md', style, filled }: IconTileProps) {
+export const IconTile = React.memo(function IconTile({ name, accent = 'purple', size = 'md', style, filled }: IconTileProps) {
   const colors = useColors();
   const dims = SIZES[size];
   const tint = accentSoft[accent];
@@ -44,19 +45,19 @@ export function IconTile({ name, accent = 'purple', size = 'md', style, filled }
       <Ionicons name={name} size={dims.icon} color={accentColor(accent)} />
     </View>
   );
-}
+});
 
 /** Solid accent for glyphs; a touch darker than the tint background for contrast. */
 export function accentColor(accent: AccentName): string {
   const map: Record<AccentName, string> = {
-    purple: '#7C3AED',
-    blue: '#2563EB',
-    green: '#059669',
-    amber: '#D97706',
-    pink: '#DB2777',
-    teal: '#0D9488',
-    orange: '#EA580C',
-    red: '#DC2626',
+    purple: '#8950F5',
+    blue: '#438CEB',
+    green: '#39B980',
+    amber: '#F2C94C',
+    pink: '#EC4899',
+    teal: '#14B8A6',
+    orange: '#F97316',
+    red: '#EF4444',
   };
   return map[accent];
 }
