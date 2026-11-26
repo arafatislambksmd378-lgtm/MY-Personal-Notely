@@ -1,4 +1,4 @@
 fatal exceptions: 0
-foreground after relaunch:     topResumedActivity=ActivityRecord{dc5d12c u0 com.notely.app/.MainActivity t14}
+foreground after relaunch:     topResumedActivity=ActivityRecord{78ea0ba u0 com.notely.app/.MainActivity t14}
 Notely relaunched and stayed in the foreground.
 js log lines: 0
