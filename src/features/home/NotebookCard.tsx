@@ -1,4 +1,5 @@
 /** Horizontal notebook tile (reference: 118pt card, icon tile, name, note count). */
+import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { IconTile, type IoniconName } from '@/components/IconTile';
@@ -13,7 +14,7 @@ interface NotebookCardProps {
   onPress: () => void;
 }
 
-export function NotebookCard({ notebook, onPress }: NotebookCardProps) {
+export const NotebookCard = React.memo(function NotebookCard({ notebook, onPress }: NotebookCardProps) {
   const colors = useColors();
   return (
     <Pressable
@@ -41,7 +42,7 @@ export function NotebookCard({ notebook, onPress }: NotebookCardProps) {
       </View>
     </Pressable>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: {

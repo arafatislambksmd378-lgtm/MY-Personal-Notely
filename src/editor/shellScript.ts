@@ -337,7 +337,7 @@ export const EDITOR_SCRIPT = `
   var canvas = document.getElementById('drawing-canvas');
   var context = canvas.getContext('2d');
   var drawing = false;
-  var brushColor = '#151223';
+  var brushColor = '#24232B';
   var brushSize = 3;
   var strokeStarted = false;
 

@@ -1,6 +1,6 @@
-/** Notebooks screen: every notebook with its live note count. */
+/** Notebooks screen: every notebook with its live note count. Uses FlatList for virtualized scrolling. */
 import { useCallback, useState } from 'react';
-import { RefreshControl, ScrollView, StyleSheet, View , Pressable } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, View, Pressable } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -16,6 +16,7 @@ import { notebookIconName } from '@/features/notebooks/icons';
 import { pluralize } from '@/utils/text';
 import { radii, spacing } from '@/design/tokens';
 import { toast } from '@/store/useToastStore';
+import type { NotebookWithCount } from '@/types/models';
 
 export default function NotebooksScreen() {
   const router = useRouter();
@@ -30,12 +31,77 @@ export default function NotebooksScreen() {
     }, [refresh]),
   );
 
+  const renderRow = useCallback(
+    ({ item }: { item: NotebookWithCount }) => (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${item.name}, ${pluralize(item.noteCount, 'note')}`}
+        onPress={() =>
+          router.push({ pathname: '/notebook/[id]', params: { id: item.id } })
+        }
+        style={({ pressed }) => [
+          styles.row,
+          {
+            backgroundColor: pressed ? colors.surfaceMuted : colors.surface,
+            borderColor: colors.border,
+          },
+        ]}
+      >
+        <IconTile name={notebookIconName(item.icon)} accent={item.color} size="lg" />
+        <View style={styles.rowTexts}>
+          <AppText variant="bodyStrong">{item.name}</AppText>
+          <AppText variant="caption" tone="muted">
+            {pluralize(item.noteCount, 'note')}
+          </AppText>
+        </View>
+        <CountBadge count={item.noteCount} accent={item.color} />
+        <Ionicons name="chevron-forward" size={17} color={colors.textMuted} />
+      </Pressable>
+    ),
+    [colors, router],
+  );
+
+  const renderNewNotebook = useCallback(() => (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel="New notebook"
+      onPress={() => setCreateOpen(true)}
+      style={({ pressed }) => [
+        styles.newNotebook,
+        {
+          borderColor: colors.primary,
+          backgroundColor: pressed ? colors.primarySoft : 'transparent',
+        },
+      ]}
+    >
+      <Ionicons name="add" size={19} color={colors.primary} />
+      <AppText variant={'button' as const} tone="primary">
+        New notebook
+      </AppText>
+    </Pressable>
+  ), [colors]);
+
+  const keyExtractor = useCallback((item: NotebookWithCount) => item.id, []);
+
+  const listHeader = (
+    <View style={styles.header}>
+      <AppText variant="title1">Notebooks</AppText>
+      <AppText variant="caption" tone="muted" style={{ marginTop: 2, marginBottom: spacing.xl }}>
+        {pluralize(stats.notebooks, 'notebook')} · {pluralize(stats.notes, 'note')} total
+      </AppText>
+    </View>
+  );
+
   return (
     <>
       <Screen scroll={false}>
-        <ScrollView
+        <FlatList
+          data={notebooks}
+          renderItem={renderRow}
+          keyExtractor={keyExtractor}
+          contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scroll}
+          ListHeaderComponent={listHeader}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -47,13 +113,8 @@ export default function NotebooksScreen() {
               tintColor={colors.primary}
             />
           }
-        >
-          <AppText variant="title1">Notebooks</AppText>
-          <AppText variant="caption" tone="muted" style={{ marginTop: 2, marginBottom: spacing.xl }}>
-            {pluralize(stats.notebooks, 'notebook')} · {pluralize(stats.notes, 'note')} total
-          </AppText>
-
-          {notebooks.length === 0 ? (
+          ListFooterComponent={renderNewNotebook}
+          ListEmptyComponent={
             <EmptyState
               title="No notebooks yet"
               message="Notebooks group your notes by project, subject or mood."
@@ -61,54 +122,8 @@ export default function NotebooksScreen() {
               actionLabel="Create notebook"
               onAction={() => setCreateOpen(true)}
             />
-          ) : (
-            <View style={{ gap: spacing.sm }}>
-              {notebooks.map((notebook) => (
-                <Pressable
-                  key={notebook.id}
-                  accessibilityRole="button"
-                  accessibilityLabel={`${notebook.name}, ${pluralize(notebook.noteCount, 'note')}`}
-                  onPress={() => router.push({ pathname: '/notebook/[id]', params: { id: notebook.id } })}
-                  style={({ pressed }) => [
-                    styles.row,
-                    {
-                      backgroundColor: pressed ? colors.surfaceMuted : colors.surface,
-                      borderColor: colors.border,
-                    },
-                  ]}
-                >
-                  <IconTile name={notebookIconName(notebook.icon)} accent={notebook.color} size="lg" />
-                  <View style={styles.rowTexts}>
-                    <AppText variant="bodyStrong">{notebook.name}</AppText>
-                    <AppText variant="caption" tone="muted">
-                      {pluralize(notebook.noteCount, 'note')}
-                    </AppText>
-                  </View>
-                  <CountBadge count={notebook.noteCount} accent={notebook.color} />
-                  <Ionicons name="chevron-forward" size={17} color={colors.textMuted} />
-                </Pressable>
-              ))}
-            </View>
-          )}
-
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="New notebook"
-            onPress={() => setCreateOpen(true)}
-            style={({ pressed }) => [
-              styles.newNotebook,
-              {
-                borderColor: colors.primary,
-                backgroundColor: pressed ? colors.primarySoft : 'transparent',
-              },
-            ]}
-          >
-            <Ionicons name="add" size={19} color={colors.primary} />
-            <AppText variant={'button' as const} tone="primary">
-              New notebook
-            </AppText>
-          </Pressable>
-        </ScrollView>
+          }
+        />
       </Screen>
 
       <PromptDialog
@@ -128,7 +143,14 @@ export default function NotebooksScreen() {
 }
 
 const styles = StyleSheet.create({
-  scroll: { paddingBottom: spacing.xxxl },
+  listContent: {
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.xxxl,
+    gap: spacing.sm,
+  },
+  header: {
+    paddingBottom: spacing.xl,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

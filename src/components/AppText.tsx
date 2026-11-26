@@ -1,4 +1,5 @@
 /** Text component bound to the Notely type scale and colour tokens. */
+import React from 'react';
 import { Text, type TextProps } from 'react-native';
 import { typeScale } from '@/design/typography';
 import { useColors } from '@/store/useSettingsStore';
@@ -12,7 +13,7 @@ export interface AppTextProps extends TextProps {
   center?: boolean;
 }
 
-export function AppText({ variant = 'body', tone = 'default', center, style, ...rest }: AppTextProps) {
+export const AppText = React.memo(function AppText({ variant = 'body', tone = 'default', center, style, ...rest }: AppTextProps) {
   const colors = useColors();
   const toneColor: Record<Tone, string> = {
     default: colors.text,
@@ -29,4 +30,4 @@ export function AppText({ variant = 'body', tone = 'default', center, style, ...
       style={[typeScale[variant], { color: toneColor[tone] }, center && { textAlign: 'center' }, style]}
     />
   );
-}
+});

@@ -33,7 +33,7 @@ export function Fab({ onPress, icon = 'pencil', size = 52, accessibilityLabel = 
         },
       ]}
     >
-      <Ionicons name={icon} size={size * 0.44} color={colors.scheme === 'dark' ? '#151223' : '#FFFFFF'} />
+      <Ionicons name={icon} size={size * 0.44} color={colors.onPrimary} />
     </Pressable>
   );
 }

@@ -14,7 +14,7 @@ export interface ChartInput {
   color?: string;
 }
 
-const DEFAULT_COLORS = ['#7C3AED', '#3B82F6', '#12B76A', '#F5A524', '#EC4899', '#14B8A6', '#F97316'];
+const DEFAULT_COLORS = ['#8950F5', '#438CEB', '#39B980', '#F2C94C', '#EC4899', '#14B8A6', '#F97316'];
 
 function escapeXml(value: string): string {
   return value
@@ -41,7 +41,7 @@ export function buildChartSvg(input: ChartInput): string {
   const max = Math.max(...values, 1);
   const plotWidth = width - padding.left - padding.right;
   const plotHeight = height - padding.top - padding.bottom;
-  const title = input.title ? `<text x="${padding.left}" y="26" font-family="sans-serif" font-size="16" font-weight="700" fill="#151223">${escapeXml(input.title)}</text>` : '';
+  const title = input.title ? `<text x="${padding.left}" y="26" font-family="sans-serif" font-size="16" font-weight="700" fill="#24232B">${escapeXml(input.title)}</text>` : '';
 
   if (input.type === 'pie') {
     const total = values.reduce((sum, value) => sum + Math.max(0, value), 0) || 1;
@@ -71,7 +71,7 @@ export function buildChartSvg(input: ChartInput): string {
       .map(
         (label, index) =>
           `<rect x="${padding.left + 4}" y="${height - 18 - index * 0}" width="0" height="0" />` +
-          `<text x="${padding.left + 6 + index * 78}" y="${height - 10}" font-family="sans-serif" font-size="10" fill="#67647A">${escapeXml(String(label).slice(0, 10))}</text>`,
+          `<text x="${padding.left + 6 + index * 78}" y="${height - 10}" font-family="sans-serif" font-size="10" fill="#92909D">${escapeXml(String(label).slice(0, 10))}</text>`,
       )
       .join('');
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-label="${escapeXml(input.title || 'Pie chart')}"><rect width="${width}" height="${height}" fill="#FFFFFF" rx="12" />${title}${slices}${legend}</svg>`;
@@ -81,7 +81,7 @@ export function buildChartSvg(input: ChartInput): string {
   const ticks = [0, 0.25, 0.5, 0.75, 1]
     .map((ratio) => {
       const y = padding.top + plotHeight - plotHeight * ratio;
-      return `<line x1="${padding.left}" y1="${y.toFixed(1)}" x2="${width - padding.right}" y2="${y.toFixed(1)}" stroke="#ECE9F4" stroke-width="1" />` +
+      return `<line x1="${padding.left}" y1="${y.toFixed(1)}" x2="${width - padding.right}" y2="${y.toFixed(1)}" stroke="#ECEAF1" stroke-width="1" />` +
         `<text x="${padding.left - 8}" y="${(y + 3).toFixed(1)}" text-anchor="end" font-family="sans-serif" font-size="9" fill="#9C99AC">${Math.round(max * ratio)}</text>`;
     })
     .join('');
@@ -89,7 +89,7 @@ export function buildChartSvg(input: ChartInput): string {
   const xLabels = labels
     .map((label, index) => {
       const x = padding.left + stepX * index + stepX / 2;
-      return `<text x="${x.toFixed(1)}" y="${height - 14}" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#67647A">${escapeXml(String(label).slice(0, 10))}</text>`;
+      return `<text x="${x.toFixed(1)}" y="${height - 14}" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#92909D">${escapeXml(String(label).slice(0, 10))}</text>`;
     })
     .join('');
 

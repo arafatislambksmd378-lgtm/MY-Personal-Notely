@@ -2,6 +2,7 @@
  * Recent-note card: coloured header band + title + excerpt, with a pin glyph
  * for pinned notes (matches the "Welcome to Notely" card in the reference).
  */
+import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,7 +18,7 @@ interface NoteCardProps {
   variant?: 'card' | 'row';
 }
 
-export function NoteCard({ note, onPress, variant = 'card' }: NoteCardProps) {
+export const NoteCard = React.memo(function NoteCard({ note, onPress, variant = 'card' }: NoteCardProps) {
   const colors = useColors();
 
   if (variant === 'row') {
@@ -101,7 +102,7 @@ export function NoteCard({ note, onPress, variant = 'card' }: NoteCardProps) {
       </View>
     </Pressable>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: {

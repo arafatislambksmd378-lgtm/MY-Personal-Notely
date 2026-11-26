@@ -42,7 +42,7 @@ function BarButton({ icon, label, onPress, primary, badge }: BarButtonProps) {
         pressed && { opacity: 0.88 },
       ]}
     >
-      <Ionicons name={icon} size={primary ? 22 : 19} color={primary ? (colors.scheme === 'dark' ? '#151223' : '#FFFFFF') : colors.textSecondary} />
+      <Ionicons name={icon} size={primary ? 22 : 19} color={primary ? colors.onPrimary : colors.textSecondary} />
       {badge ? (
         <View style={[styles.badge, { backgroundColor: colors.primarySoft }]}>
           <Ionicons name={badge as React.ComponentProps<typeof Ionicons>['name']} size={9} color={colors.primary} />
