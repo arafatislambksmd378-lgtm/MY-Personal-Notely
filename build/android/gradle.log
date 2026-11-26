@@ -12,14 +12,14 @@ For more details see https://docs.gradle.org/9.4.1/release-notes.html
 
 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
 Daemon will be stopped at the end of the build 
-> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :expo-gradle-plugin:expo-autolinking-settings-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :gradle-plugin:settings-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :gradle-plugin:shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-gradle-plugin:expo-autolinking-plugin-shared:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :gradle-plugin:settings-plugin:pluginDescriptors
 > Task :expo-gradle-plugin:expo-autolinking-settings-plugin:pluginDescriptors
-> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:processResources
 > Task :gradle-plugin:settings-plugin:processResources
+> Task :expo-gradle-plugin:expo-autolinking-settings-plugin:processResources
 > Task :gradle-plugin:shared:processResources NO-SOURCE
 > Task :expo-gradle-plugin:expo-autolinking-plugin-shared:processResources NO-SOURCE
 > Task :gradle-plugin:shared:compileKotlin
@@ -38,10 +38,10 @@ Daemon will be stopped at the end of the build
 > Task :expo-gradle-plugin:expo-autolinking-settings-plugin:compileJava NO-SOURCE
 > Task :expo-gradle-plugin:expo-autolinking-settings-plugin:classes
 > Task :expo-gradle-plugin:expo-autolinking-settings-plugin:jar
+> Task :gradle-plugin:react-native-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :expo-gradle-plugin:expo-autolinking-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :expo-module-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :expo-gradle-plugin:expo-max-sdk-override-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :gradle-plugin:react-native-gradle-plugin:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :expo-module-gradle-plugin:pluginDescriptors
 > Task :expo-module-gradle-plugin:processResources
 > Task :expo-gradle-plugin:expo-max-sdk-override-plugin:pluginDescriptors
@@ -176,27 +176,27 @@ task ':react-native-worklets:mergeReleaseNativeLibs'
 w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-reanimated/android/build.gradle.kts:168:1: 'fun Project.android(configure: Action<LibraryExtension>): Unit' is deprecated. Replaced by com.android.build.api.dsl.LibraryExtension.
 This class is not used for the public extensions in AGP when android.newDsl=true, which is the default in AGP 9.0, and will be removed in AGP 10.0.
 
-> Task :expo-constants:preBuild UP-TO-DATE
 > Task :expo-dom-webview:preBuild UP-TO-DATE
 > Task :expo-log-box:preBuild UP-TO-DATE
 > Task :expo-mlkit-ocr:preBuild UP-TO-DATE
+> Task :expo-constants:preBuild UP-TO-DATE
 > Task :expo-speech-recognition:preBuild UP-TO-DATE
 > Task :app:generateAutolinkingNewArchitectureFiles
 > Task :app:generateAutolinkingPackageList
 > Task :app:generateCodegenSchemaFromJavaScript SKIPPED
 > Task :app:generateCodegenArtifactsFromSchema SKIPPED
+> Task :app:generateReactNativeEntryPoint
+> Task :react-native-masked-view_masked-view:preBuild UP-TO-DATE
 > Task :expo:generateInlineModules
 > Task :expo:generatePackagesList
-> Task :app:generateReactNativeEntryPoint
 > Task :expo:preBuild
-> Task :react-native-masked-view_masked-view:preBuild UP-TO-DATE
-> Task :react-native-gesture-handler:generateCodegenSchemaFromJavaScript
 > Task :react-native-reanimated:assertMinimalReactNativeVersionTask
+> Task :react-native-gesture-handler:generateCodegenSchemaFromJavaScript
 > Task :react-native-reanimated:assertWorkletsVersionTask
 > Task :react-native-safe-area-context:generateCodegenSchemaFromJavaScript
+> Task :react-native-reanimated:generateCodegenSchemaFromJavaScript
 > Task :react-native-gesture-handler:generateCodegenArtifactsFromSchema
 > Task :react-native-gesture-handler:preBuild
-> Task :react-native-reanimated:generateCodegenSchemaFromJavaScript
 > Task :react-native-safe-area-context:generateCodegenArtifactsFromSchema
 > Task :react-native-safe-area-context:preBuild
 > Task :expo-modules-core:decompressPrebuiltNativeLibs
@@ -204,33 +204,39 @@ This class is not used for the public extensions in AGP when android.newDsl=true
 > Task :react-native-worklets:assertMinimalReactNativeVersionTask
 > Task :react-native-reanimated:generateCodegenArtifactsFromSchema
 > Task :react-native-webview:generateCodegenSchemaFromJavaScript
-> Task :react-native-screens:generateCodegenSchemaFromJavaScript
 > Task :react-native-worklets:generateCodegenSchemaFromJavaScript
+> Task :react-native-screens:generateCodegenSchemaFromJavaScript
 > Task :react-native-reanimated:prepareReanimatedHeadersForPrefabs
 > Task :react-native-reanimated:preBuild
 > Task :react-native-reanimated:preReleaseBuild
 > Task :expo:preReleaseBuild
 > Task :expo:mergeReleaseJniLibFolders
 > Task :expo:mergeReleaseNativeLibs NO-SOURCE
-> Task :expo:copyReleaseJniLibsProjectOnly
+> Task :react-native-worklets:generateCodegenArtifactsFromSchema
 > Task :react-native-webview:generateCodegenArtifactsFromSchema
 > Task :react-native-webview:preBuild
+> Task :expo:copyReleaseJniLibsProjectOnly
 > Task :expo-dom-webview:preReleaseBuild UP-TO-DATE
 > Task :expo-dom-webview:mergeReleaseJniLibFolders
 > Task :expo-dom-webview:mergeReleaseNativeLibs NO-SOURCE
 > Task :expo-dom-webview:copyReleaseJniLibsProjectOnly
 > Task :expo-log-box:preReleaseBuild UP-TO-DATE
 > Task :expo-log-box:mergeReleaseJniLibFolders
-> Task :react-native-screens:generateCodegenArtifactsFromSchema
-> Task :react-native-screens:preBuild
-> Task :expo-mlkit-ocr:preReleaseBuild UP-TO-DATE
 > Task :expo-log-box:mergeReleaseNativeLibs NO-SOURCE
 > Task :expo-log-box:copyReleaseJniLibsProjectOnly
-> Task :expo-modules-core:preReleaseBuild
+> Task :expo-mlkit-ocr:preReleaseBuild UP-TO-DATE
 > Task :expo-mlkit-ocr:mergeReleaseJniLibFolders
 > Task :expo-mlkit-ocr:mergeReleaseNativeLibs NO-SOURCE
-> Task :react-native-worklets:generateCodegenArtifactsFromSchema
+> Task :react-native-worklets:prepareWorkletsHeadersForPrefabs
+> Task :react-native-worklets:preBuild
+> Task :react-native-worklets:preReleaseBuild
 > Task :expo-mlkit-ocr:copyReleaseJniLibsProjectOnly
+> Task :expo-modules-core:preReleaseBuild
+> Task :react-native-screens:generateCodegenArtifactsFromSchema
+> Task :react-native-screens:preBuild
+> Task :app:preBuild
+> Task :app:preReleaseBuild
+> Task :app:mergeReleaseJniLibFolders
 > Task :expo-speech-recognition:preReleaseBuild UP-TO-DATE
 > Task :expo-speech-recognition:mergeReleaseJniLibFolders
 > Task :expo-speech-recognition:mergeReleaseNativeLibs NO-SOURCE
@@ -238,62 +244,36 @@ This class is not used for the public extensions in AGP when android.newDsl=true
 > Task :react-native-gesture-handler:preReleaseBuild
 > Task :react-native-gesture-handler:mergeReleaseJniLibFolders
 > Task :react-native-masked-view_masked-view:preReleaseBuild UP-TO-DATE
-> Task :react-native-worklets:prepareWorkletsHeadersForPrefabs
-> Task :react-native-worklets:preBuild
-> Task :app:preBuild
-> Task :app:preReleaseBuild
-> Task :react-native-worklets:preReleaseBuild
 > Task :react-native-masked-view_masked-view:mergeReleaseJniLibFolders
-> Task :app:mergeReleaseJniLibFolders
 > Task :react-native-masked-view_masked-view:mergeReleaseNativeLibs NO-SOURCE
-> Task :expo-modules-core:unpackExpoModulesV2Cpp
 > Task :react-native-masked-view_masked-view:copyReleaseJniLibsProjectOnly
 > Task :react-native-reanimated:mergeReleaseJniLibFolders
 > Task :react-native-safe-area-context:preReleaseBuild
 > Task :react-native-safe-area-context:mergeReleaseJniLibFolders
 > Task :react-native-safe-area-context:mergeReleaseNativeLibs NO-SOURCE
 > Task :react-native-safe-area-context:copyReleaseJniLibsProjectOnly
-> Task :expo-modules-core:mergeReleaseJniLibFolders
 > Task :react-native-screens:preReleaseBuild
-> Task :react-native-webview:preReleaseBuild
+> Task :expo-modules-core:unpackExpoModulesV2Cpp
 > Task :expo-constants:createReleaseExpoConfig
 > Task :expo-constants:preReleaseBuild
-> Task :react-native-webview:mergeReleaseJniLibFolders
-> Task :react-native-webview:mergeReleaseNativeLibs NO-SOURCE
 > Task :expo-constants:mergeReleaseJniLibFolders
-> Task :react-native-webview:copyReleaseJniLibsProjectOnly
 > Task :expo-constants:mergeReleaseNativeLibs NO-SOURCE
-> Task :react-native-gesture-handler:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :expo-constants:copyReleaseJniLibsProjectOnly
+> Task :react-native-webview:preReleaseBuild
+> Task :expo-modules-core:mergeReleaseJniLibFolders
+> Task :react-native-gesture-handler:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-webview:mergeReleaseJniLibFolders
+> Task :react-native-gesture-handler:generateReleaseBuildConfig
+> Task :react-native-webview:mergeReleaseNativeLibs NO-SOURCE
+> Task :react-native-gesture-handler:generateReleaseResources
+> Task :react-native-webview:copyReleaseJniLibsProjectOnly
 > Task :react-native-reanimated:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :react-native-reanimated:generateReleaseBuildConfig
-> Task :react-native-gesture-handler:generateReleaseBuildConfig
-> Task :react-native-gesture-handler:generateReleaseResources
 > Task :react-native-reanimated:generateReleaseResources
-> Task :react-native-gesture-handler:packageReleaseResources
 > Task :react-native-reanimated:packageReleaseResources
-> Task :react-native-reanimated:processReleaseNavigationResources
+> Task :react-native-gesture-handler:packageReleaseResources
 > Task :react-native-gesture-handler:processReleaseNavigationResources
-> Task :react-native-reanimated:parseReleaseLocalResources
-> Task :react-native-gesture-handler:parseReleaseLocalResources
-> Task :react-native-reanimated:generateReleaseRFile
-> Task :react-native-gesture-handler:generateReleaseRFile
-> Task :react-native-reanimated:javaPreCompileRelease
-> Task :react-native-safe-area-context:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :react-native-gesture-handler:javaPreCompileRelease
-> Task :react-native-webview:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :react-native-safe-area-context:generateReleaseBuildConfig
-> Task :react-native-webview:generateReleaseBuildConfig
-> Task :react-native-webview:generateReleaseResources
-> Task :react-native-safe-area-context:generateReleaseResources
-> Task :react-native-safe-area-context:packageReleaseResources
-> Task :react-native-safe-area-context:processReleaseNavigationResources
-> Task :react-native-webview:packageReleaseResources
-> Task :react-native-safe-area-context:parseReleaseLocalResources
-> Task :react-native-webview:processReleaseNavigationResources
-> Task :react-native-webview:parseReleaseLocalResources
-> Task :react-native-safe-area-context:generateReleaseRFile
-> Task :react-native-webview:generateReleaseRFile
+> Task :react-native-reanimated:processReleaseNavigationResources
 
 > Task :react-native-worklets:configureCMakeRelWithDebInfo[arm64-v8a]
 Checking the license for package CMake 3.22.1 in /usr/local/lib/android/sdk/licenses
@@ -304,16 +284,33 @@ Installing CMake 3.22.1 in /usr/local/lib/android/sdk/cmake/3.22.1
 "Install CMake 3.22.1 v.3.22.1" complete.
 "Install CMake 3.22.1 v.3.22.1" finished.
 
+> Task :react-native-reanimated:parseReleaseLocalResources
+> Task :react-native-gesture-handler:parseReleaseLocalResources
+> Task :react-native-reanimated:generateReleaseRFile
+> Task :react-native-reanimated:javaPreCompileRelease
+> Task :react-native-gesture-handler:generateReleaseRFile
+> Task :react-native-safe-area-context:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-safe-area-context:generateReleaseBuildConfig
+> Task :react-native-safe-area-context:generateReleaseResources
+> Task :react-native-safe-area-context:packageReleaseResources
+> Task :react-native-safe-area-context:processReleaseNavigationResources
+> Task :react-native-gesture-handler:javaPreCompileRelease
+> Task :react-native-safe-area-context:parseReleaseLocalResources
+> Task :react-native-safe-area-context:javaPreCompileRelease
+> Task :react-native-webview:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :react-native-webview:generateReleaseBuildConfig
+> Task :react-native-webview:generateReleaseResources
+> Task :react-native-webview:packageReleaseResources
+> Task :react-native-webview:processReleaseNavigationResources
+> Task :react-native-safe-area-context:generateReleaseRFile
+> Task :react-native-webview:parseReleaseLocalResources
+> Task :react-native-webview:generateReleaseRFile
 > Task :react-native-screens:configureCMakeRelWithDebInfo[arm64-v8a]
 > Task :react-native-screens:buildCMakeRelWithDebInfo[arm64-v8a]
 > Task :react-native-screens:configureCMakeRelWithDebInfo[armeabi-v7a]
-
 > Task :react-native-safe-area-context:compileReleaseKotlin
-w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaProviderManager.kt:46:19 'fun getEventDispatcherForReactTag(context: ReactContext, reactTag: Int): EventDispatcher?' is deprecated. reactTag is no longer needed.
-w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaView.kt:12:8 'class UIManagerModule : ReactContextBaseJavaModule, LifecycleEventListener, UIManager' is deprecated. This class is part of Legacy Architecture and will be removed in a future release.
-w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaView.kt:55:54 'class UIManagerModule : ReactContextBaseJavaModule, LifecycleEventListener, UIManager' is deprecated. This class is part of Legacy Architecture and will be removed in a future release.
-w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaViewShadowNode.kt:9:32 'class LayoutShadowNode : ReactShadowNodeImpl' is deprecated. This class is part of Legacy Architecture and will be removed in a future release.
-w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaViewShadowNode.kt:110:61 'class NativeViewHierarchyOptimizer : Any' is deprecated. This class is part of Legacy Architecture and will be removed in a future release.
+> Task :react-native-webview:compileReleaseKotlin
+> Task :react-native-worklets:buildCMakeRelWithDebInfo[arm64-v8a][worklets]
 
 > Task :react-native-webview:compileReleaseKotlin
 w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt:22:8 'object MapBuilder : Any' is deprecated. Use Kotlin's built-in collections extensions.
@@ -391,28 +388,34 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/r
 w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopShouldStartLoadWithRequestEvent.kt:27:42 'interface RCTEventEmitter : JavaScriptModule' is deprecated. Use [RCTModernEventEmitter] instead.
 w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/events/TopShouldStartLoadWithRequestEvent.kt:28:21 'fun receiveEvent(targetTag: Int, eventName: String, params: WritableMap?): Unit' is deprecated. Use [RCTModernEventEmitter.receiveEvent] instead.
 
+> Task :react-native-safe-area-context:compileReleaseKotlin
+w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaProviderManager.kt:46:19 'fun getEventDispatcherForReactTag(context: ReactContext, reactTag: Int): EventDispatcher?' is deprecated. reactTag is no longer needed.
+w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaView.kt:12:8 'class UIManagerModule : ReactContextBaseJavaModule, LifecycleEventListener, UIManager' is deprecated. This class is part of Legacy Architecture and will be removed in a future release.
+w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaView.kt:55:54 'class UIManagerModule : ReactContextBaseJavaModule, LifecycleEventListener, UIManager' is deprecated. This class is part of Legacy Architecture and will be removed in a future release.
+w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaViewShadowNode.kt:9:32 'class LayoutShadowNode : ReactShadowNodeImpl' is deprecated. This class is part of Legacy Architecture and will be removed in a future release.
+w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaViewShadowNode.kt:110:61 'class NativeViewHierarchyOptimizer : Any' is deprecated. This class is part of Legacy Architecture and will be removed in a future release.
+
 > Task :react-native-webview:javaPreCompileRelease
-> Task :react-native-safe-area-context:javaPreCompileRelease
 > Task :react-native-screens:buildCMakeRelWithDebInfo[armeabi-v7a]
 > Task :react-native-screens:configureCMakeRelWithDebInfo[x86]
+> Task :react-native-worklets:configureCMakeRelWithDebInfo[armeabi-v7a]
 
 > Task :react-native-webview:compileReleaseJavaWithJavac
 Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
 
-> Task :react-native-worklets:buildCMakeRelWithDebInfo[arm64-v8a][worklets]
 > Task :react-native-safe-area-context:compileReleaseJavaWithJavac
 > Task :react-native-webview:mergeReleaseGeneratedProguardFiles
 > Task :react-native-safe-area-context:mergeReleaseGeneratedProguardFiles
-> Task :react-native-safe-area-context:exportReleaseConsumerProguardFiles
 > Task :react-native-webview:exportReleaseConsumerProguardFiles
+> Task :react-native-safe-area-context:exportReleaseConsumerProguardFiles
 > Task :expo:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :expo-constants:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :expo-constants:generateReleaseResources
 > Task :expo:generateReleaseResources
+> Task :expo-constants:generateReleaseResources
 > Task :expo-constants:packageReleaseResources
-> Task :expo-constants:processReleaseNavigationResources
 > Task :expo:packageReleaseResources
+> Task :expo-constants:processReleaseNavigationResources
 > Task :expo:processReleaseNavigationResources
 > Task :expo:parseReleaseLocalResources
 > Task :expo-constants:parseReleaseLocalResources
@@ -422,59 +425,61 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :expo-constants:javaPreCompileRelease
 > Task :expo-dom-webview:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :expo-modules-core:generateReleaseBuildConfig
-> Task :expo-dom-webview:generateReleaseResources
 > Task :expo-modules-core:generateReleaseResources
+> Task :expo-dom-webview:generateReleaseResources
+> Task :expo-dom-webview:packageReleaseResources
 > Task :expo-modules-core:packageReleaseResources
 > Task :expo-modules-core:processReleaseNavigationResources
-> Task :expo-dom-webview:packageReleaseResources
-> Task :expo-modules-core:parseReleaseLocalResources
 > Task :expo-dom-webview:processReleaseNavigationResources
-> Task :expo-modules-core:javaPreCompileRelease
+> Task :expo-modules-core:parseReleaseLocalResources
 > Task :expo-dom-webview:parseReleaseLocalResources
 > Task :expo-modules-core:generateReleaseRFile
-> Task :expo-log-box:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :expo-log-box:generateReleaseBuildConfig
-> Task :expo-dom-webview:javaPreCompileRelease
 > Task :expo-dom-webview:generateReleaseRFile
+> Task :expo-modules-core:javaPreCompileRelease
+> Task :expo-log-box:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :expo-dom-webview:javaPreCompileRelease
 > Task :expo-mlkit-ocr:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :expo-log-box:generateReleaseResources
+> Task :expo-log-box:generateReleaseBuildConfig
 > Task :expo-mlkit-ocr:generateReleaseResources
+> Task :expo-log-box:generateReleaseResources
 > Task :expo-mlkit-ocr:packageReleaseResources
 > Task :expo-log-box:packageReleaseResources
 > Task :expo-mlkit-ocr:processReleaseNavigationResources
 > Task :expo-log-box:processReleaseNavigationResources
-> Task :expo-log-box:parseReleaseLocalResources
 > Task :expo-mlkit-ocr:parseReleaseLocalResources
+> Task :expo-log-box:javaPreCompileRelease
+> Task :expo-log-box:parseReleaseLocalResources
 > Task :expo-mlkit-ocr:generateReleaseRFile
 > Task :expo-log-box:generateReleaseRFile
-> Task :expo-log-box:javaPreCompileRelease
 > Task :expo-speech-recognition:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :expo-mlkit-ocr:javaPreCompileRelease
-> Task :react-native-worklets:configureCMakeRelWithDebInfo[armeabi-v7a]
 > Task :expo-speech-recognition:generateReleaseResources
 > Task :expo:javaPreCompileRelease
 > Task :react-native-masked-view_masked-view:generateReleaseResources
 > Task :expo-speech-recognition:packageReleaseResources
-> Task :react-native-masked-view_masked-view:packageReleaseResources
 > Task :expo-speech-recognition:processReleaseNavigationResources
+> Task :react-native-masked-view_masked-view:packageReleaseResources
 > Task :react-native-masked-view_masked-view:processReleaseNavigationResources
 > Task :expo-speech-recognition:javaPreCompileRelease
 > Task :expo-speech-recognition:parseReleaseLocalResources
 > Task :react-native-masked-view_masked-view:parseReleaseLocalResources
 > Task :expo-speech-recognition:generateReleaseRFile
-> Task :react-native-masked-view_masked-view:javaPreCompileRelease
 > Task :react-native-masked-view_masked-view:generateReleaseRFile
+> Task :react-native-masked-view_masked-view:javaPreCompileRelease
 > Task :app:buildKotlinToolingMetadata
-> Task :react-native-screens:buildCMakeRelWithDebInfo[x86]
-> Task :react-native-screens:configureCMakeRelWithDebInfo[x86_64]
 
 > Task :react-native-masked-view_masked-view:compileReleaseJavaWithJavac
 Note: /home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/@react-native-masked-view/masked-view/android/src/main/java/org/reactnative/maskedview/RNCMaskedViewPackage.java uses or overrides a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
 
+> Task :react-native-screens:buildCMakeRelWithDebInfo[x86]
+> Task :react-native-screens:configureCMakeRelWithDebInfo[x86_64]
 > Task :react-native-masked-view_masked-view:mergeReleaseGeneratedProguardFiles
 > Task :react-native-masked-view_masked-view:exportReleaseConsumerProguardFiles
 > Task :react-native-masked-view_masked-view:bundleLibCompileToJarRelease
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateReleaseBuildConfig
+> Task :app:checkReleaseDuplicateClasses
 > Task :react-native-safe-area-context:bundleLibCompileToJarRelease
 > Task :react-native-webview:bundleLibCompileToJarRelease
 > Task :expo:prepareReleaseArtProfile
@@ -492,9 +497,6 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :expo:writeReleaseAarMetadata
 > Task :expo-constants:writeReleaseAarMetadata
 > Task :expo-dom-webview:writeReleaseAarMetadata
-> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :app:generateReleaseBuildConfig
-> Task :app:checkReleaseDuplicateClasses
 > Task :expo-log-box:writeReleaseAarMetadata
 > Task :expo-mlkit-ocr:writeReleaseAarMetadata
 > Task :expo-modules-core:writeReleaseAarMetadata
@@ -562,11 +564,6 @@ Recommendation: remove package="com.th3rdwave.safeareacontext" from the source A
 > Task :react-native-webview:mapReleaseSourceSetPaths
 > Task :react-native-webview:compileReleaseLibraryResources
 > Task :react-native-masked-view_masked-view:bundleLibRuntimeToJarRelease
-
-> Task :app:createBundleReleaseJsAndAssets
-Starting Metro Bundler
-
-
 > Task :react-native-safe-area-context:bundleLibRuntimeToJarRelease
 > Task :react-native-webview:bundleLibRuntimeToJarRelease
 > Task :react-native-masked-view_masked-view:processReleaseJavaRes NO-SOURCE
@@ -596,6 +593,11 @@ Starting Metro Bundler
 > Task :react-native-safe-area-context:mergeReleaseAssets
 > Task :react-native-webview:generateReleaseAssets UP-TO-DATE
 > Task :react-native-webview:mergeReleaseAssets
+
+> Task :app:createBundleReleaseJsAndAssets
+Starting Metro Bundler
+
+
 > Task :expo:extractProguardFiles
 > Task :expo-constants:extractProguardFiles
 > Task :expo-modules-core:extractProguardFiles
@@ -616,6 +618,7 @@ Starting Metro Bundler
 > Task :react-native-gesture-handler:prepareLintJarForPublish
 > Task :react-native-masked-view_masked-view:createFullJarRelease
 > Task :react-native-masked-view_masked-view:extractProguardFiles
+> Task :react-native-worklets:buildCMakeRelWithDebInfo[armeabi-v7a][worklets]
 > Task :react-native-screens:buildCMakeRelWithDebInfo[x86_64]
 > Task :react-native-screens:mergeReleaseJniLibFolders
 > Task :react-native-screens:mergeReleaseNativeLibs
@@ -654,7 +657,6 @@ Starting Metro Bundler
 > Task :react-native-safe-area-context:stripReleaseDebugSymbols NO-SOURCE
 > Task :react-native-safe-area-context:copyReleaseJniLibsProjectAndLocalJars
 > Task :react-native-safe-area-context:extractDeepLinksForAarRelease
-> Task :react-native-worklets:buildCMakeRelWithDebInfo[armeabi-v7a][worklets]
 > Task :react-native-worklets:configureCMakeRelWithDebInfo[x86]
 > Task :react-native-safe-area-context:extractReleaseAnnotations
 > Task :react-native-safe-area-context:mergeReleaseConsumerProguardFiles
@@ -699,6 +701,7 @@ Starting Metro Bundler
 > Task :expo-constants:stripReleaseDebugSymbols NO-SOURCE
 > Task :expo-constants:copyReleaseJniLibsProjectAndLocalJars
 > Task :expo-constants:extractDeepLinksForAarRelease
+> Task :react-native-screens:compileReleaseKotlin
 > Task :expo-mlkit-ocr:checkReleaseAarMetadata
 > Task :expo-mlkit-ocr:stripReleaseDebugSymbols NO-SOURCE
 > Task :expo-mlkit-ocr:copyReleaseJniLibsProjectAndLocalJars
@@ -730,33 +733,32 @@ Starting Metro Bundler
 > Task :expo-constants:verifyReleaseResources
 > Task :expo-dom-webview:mergeReleaseResources
 > Task :expo-dom-webview:verifyReleaseResources
-> Task :react-native-screens:compileReleaseKotlin
+> Task :react-native-worklets:buildCMakeRelWithDebInfo[x86][worklets]
 > Task :expo-log-box:mergeReleaseResources
+> Task :expo-log-box:verifyReleaseResources
 
 > Task :app:createBundleReleaseJsAndAssets
-Android Bundled 43298ms node_modules/expo-router/entry.js (2053 modules)
+Android Bundled 70141ms node_modules/expo-router/entry.js (2061 modules)
 Writing bundle output to: /home/runner/work/MY-Personal-Notely/MY-Personal-Notely/android/app/build/generated/assets/react/release/index.android.bundle
 Writing sourcemap output to: /home/runner/work/MY-Personal-Notely/MY-Personal-Notely/android/app/build/intermediates/sourcemaps/react/release/index.android.bundle.packager.map
 Copying 61 asset files
 Done writing bundle output
 Done writing sourcemap output
 
-> Task :expo-log-box:verifyReleaseResources
 > Task :expo-mlkit-ocr:mergeReleaseResources
 > Task :expo-mlkit-ocr:verifyReleaseResources
 > Task :expo-speech-recognition:mergeReleaseResources
 > Task :expo-speech-recognition:verifyReleaseResources
 > Task :react-native-masked-view_masked-view:bundleReleaseAar
 > Task :react-native-masked-view_masked-view:mergeReleaseResources
-> Task :react-native-worklets:buildCMakeRelWithDebInfo[x86][worklets]
 > Task :react-native-masked-view_masked-view:verifyReleaseResources
 > Task :react-native-masked-view_masked-view:assembleRelease
 > Task :react-native-safe-area-context:bundleReleaseAar
 > Task :react-native-safe-area-context:mergeReleaseResources
+> Task :react-native-worklets:configureCMakeRelWithDebInfo[x86_64]
 > Task :react-native-safe-area-context:verifyReleaseResources
 > Task :react-native-safe-area-context:assembleRelease
 > Task :react-native-screens:mergeReleaseResources
-> Task :react-native-worklets:configureCMakeRelWithDebInfo[x86_64]
 > Task :react-native-screens:verifyReleaseResources
 > Task :react-native-webview:bundleReleaseAar
 > Task :react-native-webview:mergeReleaseResources
@@ -843,12 +845,21 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/r
 > Task :react-native-worklets:generateReleaseRFile
 > Task :react-native-reanimated:configureCMakeRelWithDebInfo[arm64-v8a]
 > Task :expo-modules-core:configureCMakeRelWithDebInfo[arm64-v8a]
+> Task :react-native-worklets:javaPreCompileRelease
+> Task :app:generateReleaseResValues
+> Task :app:generateReleaseResources
+> Task :app:packageReleaseResources
 > Task :react-native-reanimated:configureCMakeRelWithDebInfo[armeabi-v7a]
 > Task :react-native-worklets:compileReleaseKotlin
-> Task :react-native-worklets:javaPreCompileRelease
+> Task :app:processReleaseNavigationResources
+> Task :app:parseReleaseLocalResources
+> Task :app:generateReleaseRFile
+> Task :app:javaPreCompileRelease
+> Task :app:mapReleaseSourceSetPaths
 > Task :react-native-worklets:compileReleaseJavaWithJavac
 > Task :react-native-worklets:bundleLibCompileToJarRelease
 > Task :react-native-worklets:mergeReleaseGeneratedProguardFiles
+> Task :app:compileReleaseNavigationResources
 > Task :react-native-worklets:exportReleaseConsumerProguardFiles
 > Task :react-native-worklets:prepareReleaseArtProfile
 > Task :react-native-worklets:writeReleaseAarMetadata
@@ -866,21 +877,22 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/r
 > Task :react-native-reanimated:configureCMakeRelWithDebInfo[x86_64]
 > Task :react-native-reanimated:generateJsonModelRelease
 > Task :react-native-reanimated:prefabReleaseConfigurePackage
+> Task :app:mergeReleaseResources
 > Task :react-native-worklets:generateReleaseLintModel
-> Task :expo-modules-core:buildCMakeRelWithDebInfo[arm64-v8a]
-> Task :react-native-reanimated:buildCMakeRelWithDebInfo[arm64-v8a][reanimated]
-> Task :react-native-gesture-handler:configureCMakeRelWithDebInfo[arm64-v8a]
-> Task :expo-modules-core:configureCMakeRelWithDebInfo[armeabi-v7a]
 > Task :app:configureCMakeRelWithDebInfo[arm64-v8a]
-> Task :expo-modules-core:buildCMakeRelWithDebInfo[armeabi-v7a]
-> Task :expo-modules-core:configureCMakeRelWithDebInfo[x86]
-> Task :react-native-gesture-handler:configureCMakeRelWithDebInfo[armeabi-v7a]
+> Task :react-native-gesture-handler:configureCMakeRelWithDebInfo[arm64-v8a]
 > Task :app:configureCMakeRelWithDebInfo[armeabi-v7a]
-> Task :react-native-gesture-handler:configureCMakeRelWithDebInfo[x86]
+> Task :react-native-gesture-handler:configureCMakeRelWithDebInfo[armeabi-v7a]
 > Task :app:configureCMakeRelWithDebInfo[x86]
+> Task :react-native-gesture-handler:configureCMakeRelWithDebInfo[x86]
+> Task :app:configureCMakeRelWithDebInfo[x86_64]
 > Task :react-native-gesture-handler:configureCMakeRelWithDebInfo[x86_64]
 > Task :react-native-worklets:prepareLintJarForPublish
 > Task :react-native-gesture-handler:checkReleaseAarMetadata
+> Task :app:mergeReleaseArtProfile
+> Task :app:checkReleaseAarMetadata
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease
 > Task :expo:checkReleaseAarMetadata
 > Task :react-native-worklets:checkReleaseAarMetadata
 > Task :react-native-worklets:stripReleaseDebugSymbols
@@ -890,27 +902,6 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/r
 > Task :react-native-worklets:mergeReleaseConsumerProguardFiles
 > Task :react-native-worklets:mergeReleaseJavaResource
 > Task :react-native-worklets:syncReleaseLibJars
-> Task :app:configureCMakeRelWithDebInfo[x86_64]
-> Task :app:generateReleaseResValues
-> Task :app:generateReleaseResources
-> Task :app:packageReleaseResources
-> Task :react-native-worklets:bundleReleaseLocalLintAar
-> Task :app:processReleaseNavigationResources
-> Task :app:parseReleaseLocalResources
-> Task :app:generateReleaseRFile
-> Task :app:javaPreCompileRelease
-> Task :react-native-worklets:writeReleaseLintModelMetadata
-> Task :react-native-worklets:lintVitalAnalyzeRelease SKIPPED
-> Task :react-native-worklets:generateReleaseLintVitalModel
-> Task :app:mergeReleaseArtProfile
-> Task :app:checkReleaseAarMetadata
-> Task :app:mapReleaseSourceSetPaths
-> Task :app:compileReleaseNavigationResources
-> Task :expo:mergeReleaseResources
-> Task :app:createReleaseCompatibleScreenManifests
-> Task :app:extractDeepLinksRelease
-> Task :expo-modules-core:buildCMakeRelWithDebInfo[x86]
-> Task :app:mergeReleaseResources
 
 > Task :app:processReleaseMainManifest
 /home/runner/work/MY-Personal-Notely/MY-Personal-Notely/android/app/src/main/AndroidManifest.xml Warning:
@@ -925,22 +916,28 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/r
 
 > Task :app:processReleaseManifest
 > Task :app:processReleaseManifestForPackage
-> Task :expo-modules-core:configureCMakeRelWithDebInfo[x86_64]
-> Task :expo:verifyReleaseResources
+> Task :react-native-worklets:bundleReleaseLocalLintAar
+> Task :react-native-worklets:writeReleaseLintModelMetadata
+> Task :react-native-worklets:lintVitalAnalyzeRelease SKIPPED
+> Task :react-native-worklets:generateReleaseLintVitalModel
+> Task :expo:mergeReleaseResources
 > Task :app:extractProguardFiles
 > Task :app:mergeReleaseStartupProfile
 > Task :app:generateReleaseAssets UP-TO-DATE
+> Task :expo-modules-core:buildCMakeRelWithDebInfo[arm64-v8a]
 > Task :app:mergeReleaseAssets
 > Task :app:compressReleaseAssets
 > Task :app:extractReleaseVersionControlInfo
 > Task :app:processReleaseResources
 > Task :app:collectReleaseDependencies
-> Task :react-native-gesture-handler:mergeReleaseResources
+> Task :app:optimizeReleaseResources
 > Task :app:sdkReleaseDependencyData
 > Task :app:validateSigningRelease
 > Task :app:writeReleaseAppMetadata
 > Task :app:writeReleaseSigningConfigVersions
-> Task :app:optimizeReleaseResources
+> Task :react-native-reanimated:buildCMakeRelWithDebInfo[arm64-v8a][reanimated]
+> Task :react-native-gesture-handler:mergeReleaseResources
+> Task :expo:verifyReleaseResources
 > Task :react-native-gesture-handler:verifyReleaseResources
 > Task :app:processApplicationManifestReleaseForBundle
 > Task :app:bundleReleaseResources
@@ -950,6 +947,11 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/r
 > Task :react-native-worklets:mergeReleaseResources
 > Task :react-native-worklets:verifyReleaseResources
 > Task :react-native-worklets:assembleRelease
+> Task :expo-modules-core:configureCMakeRelWithDebInfo[armeabi-v7a]
+> Task :expo-modules-core:buildCMakeRelWithDebInfo[armeabi-v7a]
+> Task :expo-modules-core:configureCMakeRelWithDebInfo[x86]
+> Task :expo-modules-core:buildCMakeRelWithDebInfo[x86]
+> Task :expo-modules-core:configureCMakeRelWithDebInfo[x86_64]
 > Task :react-native-reanimated:buildCMakeRelWithDebInfo[armeabi-v7a][reanimated]
 > Task :expo-modules-core:buildCMakeRelWithDebInfo[x86_64]
 > Task :expo-modules-core:mergeReleaseNativeLibs
@@ -959,7 +961,6 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/r
 > Task :expo-modules-core:copyReleaseJniLibsProjectOnly
 > Task :expo-modules-core:mergeReleaseResources
 > Task :expo-modules-core:verifyReleaseResources
-
 > Task :expo-modules-core:compileReleaseKotlin
 w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/jni/CppType.kt:42:23 'class NativeArrayBuffer : Destructible' is deprecated. Use ArrayBuffer instead.
 w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/expo-modules-core/android/src/main/java/expo/modules/kotlin/jni/JavaCallback.kt:38:10 'class NativeArrayBuffer : Destructible' is deprecated. Use ArrayBuffer instead.
@@ -994,15 +995,14 @@ Note: Recompile with -Xlint:deprecation for details.
 
 > Task :expo-modules-core:mergeReleaseGeneratedProguardFiles
 > Task :expo-modules-core:exportReleaseConsumerProguardFiles
-> Task :expo-modules-core:bundleLibCompileToJarRelease
 > Task :expo-modules-core:processReleaseJavaRes
+> Task :expo-modules-core:bundleLibCompileToJarRelease
 > Task :expo-modules-core:bundleLibRuntimeToJarRelease
+> Task :expo-modules-core:generateReleaseLintModel
 > Task :expo-constants:compileReleaseKotlin
 > Task :expo-constants:compileReleaseJavaWithJavac NO-SOURCE
 > Task :expo-constants:bundleLibCompileToJarRelease
 > Task :expo-log-box:compileReleaseKotlin
-> Task :expo-log-box:compileReleaseJavaWithJavac
-> Task :expo-log-box:bundleLibCompileToJarRelease
 
 > Task :expo-dom-webview:compileReleaseKotlin
 w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/@expo/dom-webview/android/src/main/java/expo/modules/webview/DomWebView.kt:200:16 'var allowFileAccessFromFileURLs: Boolean' is deprecated. Deprecated in Java.
@@ -1010,6 +1010,8 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/@
 
 > Task :expo-dom-webview:compileReleaseJavaWithJavac NO-SOURCE
 > Task :expo-dom-webview:bundleLibCompileToJarRelease
+> Task :expo-log-box:compileReleaseJavaWithJavac
+> Task :expo-log-box:bundleLibCompileToJarRelease
 > Task :expo-log-box:mergeReleaseGeneratedProguardFiles
 > Task :expo-log-box:exportReleaseConsumerProguardFiles
 > Task :expo-dom-webview:mergeReleaseGeneratedProguardFiles
@@ -1024,15 +1026,6 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/@
 > Task :expo-log-box:processReleaseJavaRes
 > Task :expo-constants:createFullJarRelease
 > Task :expo-modules-core:createFullJarRelease
-> Task :expo-modules-core:generateReleaseLintModel
-> Task :expo-constants:generateReleaseLintModel
-> Task :expo-dom-webview:createFullJarRelease
-> Task :expo-dom-webview:generateReleaseLintModel
-> Task :expo-log-box:createFullJarRelease
-> Task :expo-log-box:generateReleaseLintModel
-> Task :expo-modules-core:extractReleaseAnnotations
-> Task :expo-modules-core:mergeReleaseConsumerProguardFiles
-> Task :expo-modules-core:mergeReleaseJavaResource
 > Task :expo-mlkit-ocr:compileReleaseKotlin
 > Task :expo-mlkit-ocr:compileReleaseJavaWithJavac NO-SOURCE
 > Task :expo-mlkit-ocr:bundleLibCompileToJarRelease
@@ -1040,7 +1033,15 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/@
 > Task :expo-mlkit-ocr:exportReleaseConsumerProguardFiles
 > Task :expo-mlkit-ocr:bundleLibRuntimeToJarRelease
 > Task :expo-mlkit-ocr:processReleaseJavaRes
+> Task :expo-constants:generateReleaseLintModel
+> Task :expo-dom-webview:createFullJarRelease
+> Task :expo-log-box:createFullJarRelease
+> Task :expo-dom-webview:generateReleaseLintModel
 > Task :expo-mlkit-ocr:createFullJarRelease
+> Task :expo-log-box:generateReleaseLintModel
+> Task :expo-modules-core:extractReleaseAnnotations
+> Task :expo-modules-core:mergeReleaseConsumerProguardFiles
+> Task :expo-modules-core:mergeReleaseJavaResource
 > Task :expo-modules-core:syncReleaseLibJars
 > Task :expo-modules-core:bundleReleaseLocalLintAar
 > Task :expo-log-box:extractReleaseAnnotations
@@ -1065,43 +1066,43 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/@
 > Task :expo-constants:generateReleaseLintVitalModel
 > Task :expo-dom-webview:generateReleaseLintVitalModel
 > Task :expo-log-box:generateReleaseLintVitalModel
+> Task :expo-speech-recognition:compileReleaseKotlin
+> Task :expo-speech-recognition:compileReleaseJavaWithJavac NO-SOURCE
+> Task :expo-speech-recognition:bundleLibCompileToJarRelease
 > Task :expo-modules-core:generateReleaseLintVitalModel
+> Task :expo-speech-recognition:mergeReleaseGeneratedProguardFiles
+> Task :expo-speech-recognition:exportReleaseConsumerProguardFiles
+> Task :expo-speech-recognition:bundleLibRuntimeToJarRelease
+> Task :expo-speech-recognition:processReleaseJavaRes
+> Task :expo-speech-recognition:createFullJarRelease
+> Task :expo-mlkit-ocr:generateReleaseLintModel
+> Task :expo-speech-recognition:generateReleaseLintModel
+> Task :expo-speech-recognition:extractReleaseAnnotations
+> Task :expo-speech-recognition:mergeReleaseConsumerProguardFiles
+> Task :expo-mlkit-ocr:extractReleaseAnnotations
+> Task :expo-mlkit-ocr:mergeReleaseConsumerProguardFiles
+> Task :expo-speech-recognition:mergeReleaseJavaResource
+> Task :expo-speech-recognition:syncReleaseLibJars
+> Task :expo-speech-recognition:bundleReleaseLocalLintAar
+> Task :expo-mlkit-ocr:mergeReleaseJavaResource
+> Task :expo-speech-recognition:lintVitalAnalyzeRelease SKIPPED
+> Task :expo-mlkit-ocr:syncReleaseLibJars
+> Task :expo-speech-recognition:generateReleaseLintVitalModel
+> Task :expo-mlkit-ocr:bundleReleaseLocalLintAar
 > Task :expo-constants:bundleReleaseAar
 > Task :expo-constants:assembleRelease
+> Task :expo-mlkit-ocr:lintVitalAnalyzeRelease SKIPPED
 > Task :expo-dom-webview:bundleReleaseAar
 > Task :expo-dom-webview:assembleRelease
 > Task :expo-log-box:bundleReleaseAar
 > Task :expo-log-box:assembleRelease
-> Task :expo-speech-recognition:compileReleaseKotlin
-> Task :expo-speech-recognition:compileReleaseJavaWithJavac NO-SOURCE
-> Task :expo-speech-recognition:bundleLibCompileToJarRelease
-> Task :expo-mlkit-ocr:generateReleaseLintModel
-> Task :expo-speech-recognition:mergeReleaseGeneratedProguardFiles
-> Task :expo-modules-core:bundleReleaseAar
-> Task :expo-speech-recognition:exportReleaseConsumerProguardFiles
-> Task :expo-speech-recognition:processReleaseJavaRes
-> Task :expo-speech-recognition:generateReleaseLintModel
-> Task :expo-mlkit-ocr:extractReleaseAnnotations
-> Task :expo-mlkit-ocr:mergeReleaseConsumerProguardFiles
-> Task :expo-speech-recognition:bundleLibRuntimeToJarRelease
-> Task :expo-mlkit-ocr:mergeReleaseJavaResource
-> Task :expo-speech-recognition:createFullJarRelease
-> Task :expo-mlkit-ocr:syncReleaseLibJars
-> Task :expo-mlkit-ocr:bundleReleaseLocalLintAar
-> Task :expo-mlkit-ocr:lintVitalAnalyzeRelease SKIPPED
 > Task :expo-mlkit-ocr:generateReleaseLintVitalModel
 > Task :expo-mlkit-ocr:bundleReleaseAar
 > Task :expo-mlkit-ocr:assembleRelease
-> Task :expo-modules-core:assembleRelease
-> Task :expo-speech-recognition:extractReleaseAnnotations
-> Task :expo-speech-recognition:mergeReleaseConsumerProguardFiles
-> Task :expo-speech-recognition:lintVitalAnalyzeRelease SKIPPED
-> Task :expo-speech-recognition:mergeReleaseJavaResource
-> Task :expo-speech-recognition:generateReleaseLintVitalModel
-> Task :expo-speech-recognition:syncReleaseLibJars
-> Task :expo-speech-recognition:bundleReleaseLocalLintAar
 > Task :expo-speech-recognition:bundleReleaseAar
 > Task :expo-speech-recognition:assembleRelease
+> Task :expo-modules-core:bundleReleaseAar
+> Task :expo-modules-core:assembleRelease
 
 > Task :expo:compileReleaseKotlin
 w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/expo/android/src/main/java/expo/modules/ExpoModulesPackage.kt:34:16 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
@@ -1118,8 +1119,8 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/e
 > Task :expo:compileReleaseJavaWithJavac NO-SOURCE
 > Task :expo:mergeReleaseGeneratedProguardFiles
 > Task :expo:exportReleaseConsumerProguardFiles
-> Task :expo:bundleLibRuntimeToJarRelease
 > Task :expo:bundleLibCompileToJarRelease
+> Task :expo:bundleLibRuntimeToJarRelease
 > Task :expo:processReleaseJavaRes
 > Task :expo:createFullJarRelease
 > Task :expo:generateReleaseLintModel
@@ -1162,11 +1163,10 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/r
 w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-reanimated/android/src/main/java/com/swmansion/reanimated/nativeProxy/NoopEventHandler.kt:37:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
 w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-reanimated/android/src/main/java/com/swmansion/reanimated/sensor/ReanimatedSensor.kt:28:26 'val defaultDisplay: Display!' is deprecated. Deprecated in Java.
 
-> Task :react-native-gesture-handler:buildCMakeRelWithDebInfo[arm64-v8a]
 > Task :react-native-reanimated:compileReleaseJavaWithJavac
 > Task :react-native-reanimated:mergeReleaseGeneratedProguardFiles
-> Task :react-native-reanimated:exportReleaseConsumerProguardFiles
 > Task :react-native-reanimated:bundleLibCompileToJarRelease
+> Task :react-native-reanimated:exportReleaseConsumerProguardFiles
 > Task :react-native-reanimated:bundleLibRuntimeToJarRelease
 > Task :react-native-reanimated:processReleaseJavaRes
 > Task :react-native-reanimated:createFullJarRelease
@@ -1177,8 +1177,10 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/r
 > Task :react-native-reanimated:mergeReleaseJavaResource
 > Task :react-native-reanimated:generateReleaseLintVitalModel
 > Task :react-native-reanimated:syncReleaseLibJars
+> Task :react-native-gesture-handler:buildCMakeRelWithDebInfo[arm64-v8a]
 > Task :react-native-reanimated:bundleReleaseLocalLintAar
 > Task :react-native-gesture-handler:buildCMakeRelWithDebInfo[armeabi-v7a]
+> Task :app:buildCMakeRelWithDebInfo[arm64-v8a]
 > Task :react-native-gesture-handler:buildCMakeRelWithDebInfo[x86]
 > Task :react-native-reanimated:bundleReleaseAar
 > Task :react-native-reanimated:assembleRelease
@@ -1187,7 +1189,6 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/r
 > Task :react-native-gesture-handler:stripReleaseDebugSymbols
 > Task :react-native-gesture-handler:copyReleaseJniLibsProjectAndLocalJars
 > Task :react-native-gesture-handler:copyReleaseJniLibsProjectOnly
-> Task :app:buildCMakeRelWithDebInfo[arm64-v8a]
 
 > Task :react-native-gesture-handler:compileReleaseKotlin
 w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/node_modules/react-native-gesture-handler/android/src/main/java/com/swmansion/gesturehandler/react/RNGestureHandlerButtonViewManager.kt:799:45 'fun getEventDispatcherForReactTag(context: ReactContext, reactTag: Int): EventDispatcher?' is deprecated. reactTag is no longer needed.
@@ -1221,11 +1222,11 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/android/app/sr
 > Task :app:compileReleaseJavaWithJavac
 > Task :app:mergeReleaseGeneratedProguardFiles
 > Task :app:processReleaseJavaRes
-> Task :app:generateReleaseLintVitalReportModel
+> Task :app:mergeReleaseNativeLibs
 > Task :app:expandReleaseArtProfileWildcards
 > Task :app:mergeReleaseJavaResource
-> Task :app:mergeReleaseNativeLibs
 > Task :app:stripReleaseDebugSymbols
+> Task :app:generateReleaseLintVitalReportModel
 > Task :app:extractReleaseNativeSymbolTables
 > Task :app:mergeReleaseNativeDebugMetadata
 > Task :app:lintVitalAnalyzeRelease
@@ -1238,6 +1239,13 @@ w: file:///home/runner/work/MY-Personal-Notely/MY-Personal-Notely/android/app/sr
 > Task :app:createReleaseApkListingFileRedirect
 > Task :app:assembleRelease
 > Task :app:packageReleaseBundle
+The Daemon will expire after the build after running out of JVM Metaspace.
+The project memory settings are likely not configured or are configured to an insufficient value.
+The daemon will restart for the next build, which may increase subsequent build times.
+These settings can be adjusted by setting 'org.gradle.jvmargs' in 'gradle.properties'.
+The currently configured max heap space is '2 GiB' and the configured max metaspace is '512 MiB'.
+For more information on how to set these values, please refer to https://docs.gradle.org/9.4.1/userguide/build_environment.html#sec:configuring_jvm_memory in the Gradle documentation.
+To disable this warning, set 'org.gradle.daemon.performance.disable-logging=true'.
 > Task :app:signReleaseBundle
 > Task :app:produceReleaseBundleIdeListingFile
 > Task :app:createReleaseBundleListingFileRedirect
@@ -1251,5 +1259,5 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 14m 24s
+BUILD SUCCESSFUL in 24m 7s
 726 actionable tasks: 726 executed
