@@ -15,10 +15,11 @@ import { relativeTime } from '@/utils/dates';
 interface NoteCardProps {
   note: DocumentSummary;
   onPress: () => void;
+  onLongPress?: () => void;
   variant?: 'card' | 'row';
 }
 
-export const NoteCard = React.memo(function NoteCard({ note, onPress, variant = 'card' }: NoteCardProps) {
+export const NoteCard = React.memo(function NoteCard({ note, onPress, onLongPress, variant = 'card' }: NoteCardProps) {
   const colors = useColors();
 
   if (variant === 'row') {
@@ -27,6 +28,7 @@ export const NoteCard = React.memo(function NoteCard({ note, onPress, variant = 
         accessibilityRole="button"
         accessibilityLabel={note.title}
         onPress={onPress}
+        onLongPress={onLongPress}
         style={({ pressed }) => [
           styles.row,
           {
@@ -68,6 +70,7 @@ export const NoteCard = React.memo(function NoteCard({ note, onPress, variant = 
       accessibilityRole="button"
       accessibilityLabel={note.title}
       onPress={onPress}
+      onLongPress={onLongPress}
       style={({ pressed }) => [
         styles.card,
         shadows.card,

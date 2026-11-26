@@ -18,7 +18,15 @@ import { EmptyState } from '@/components/EmptyState';
 import { NoteCard } from '@/features/home/NoteCard';
 import { NOTEBOOK_ICONS, notebookIconName } from '@/features/notebooks/icons';
 import { getNotebookWithCount, updateNotebook, deleteNotebook } from '@/db/repositories/notebooks';
-import { listDocumentSummaries, createDocument } from '@/db/repositories/documents';
+import {
+  listDocumentSummaries,
+  createDocument,
+  duplicateDocument,
+  patchDocument,
+  togglePinned,
+  trashDocument,
+} from '@/db/repositories/documents';
+import { NoteOptionsSheet } from '@/features/editor/NoteOptionsSheet';
 import type { DocumentSummary, NotebookWithCount } from '@/types/models';
 import type { AccentName } from '@/design/tokens';
 import { radii, spacing } from '@/design/tokens';
@@ -40,6 +48,13 @@ export default function NotebookDetailScreen() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [missing, setMissing] = useState(false);
+  const [optionsNote, setOptionsNote] = useState<DocumentSummary | null>(null);
+  const [optionsVisible, setOptionsVisible] = useState(false);
+
+  const openNoteOptions = useCallback((note: DocumentSummary) => {
+    setOptionsNote(note);
+    setOptionsVisible(true);
+  }, []);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -142,6 +157,7 @@ export default function NotebookDetailScreen() {
                   note={note}
                   variant="row"
                   onPress={() => router.push({ pathname: '/note/[id]', params: { id: note.id } })}
+                  onLongPress={() => openNoteOptions(note)}
                 />
               ))
             )}
@@ -248,6 +264,43 @@ export default function NotebookDetailScreen() {
         }}
         onClose={() => setDeleteOpen(false)}
       />
+
+      {optionsNote && (
+        <NoteOptionsSheet
+          visible={optionsVisible}
+          variant="noteList"
+          onClose={() => setOptionsVisible(false)}
+          note={optionsNote}
+          onColorChange={async (color) => {
+            await patchDocument(optionsNote!.id, { cardColor: color });
+            await load();
+            await refreshLibrary();
+            toast.show('Note colour updated');
+          }}
+          onPinToggle={async () => {
+            await togglePinned(optionsNote!.id);
+            await load();
+            await refreshLibrary();
+            toast.show(optionsNote!.isPinned ? 'Unpinned from top' : 'Pinned to top');
+          }}
+          onDuplicate={async () => {
+            const copy = await duplicateDocument(optionsNote!.id);
+            await load();
+            await refreshLibrary();
+            toast.show('Copy created');
+            router.push({ pathname: '/note/[id]', params: { id: copy.id } });
+          }}
+          onOpenEditor={() => {
+            router.push({ pathname: '/note/[id]', params: { id: optionsNote!.id } });
+          }}
+          onDelete={async () => {
+            await trashDocument(optionsNote!.id);
+            await load();
+            await refreshLibrary();
+            toast.show('Moved to Trash');
+          }}
+        />
+      )}
     </>
   );
 }

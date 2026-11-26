@@ -21,11 +21,14 @@ import { useLibraryStore } from '@/store/useLibraryStore';
 import { useSettingsStore, useColors } from '@/store/useSettingsStore';
 import { NotebookCard } from '@/features/home/NotebookCard';
 import { NoteCard } from '@/features/home/NoteCard';
+import { NoteOptionsSheet } from '@/features/editor/NoteOptionsSheet';
 import { formatHeaderDate, greeting } from '@/utils/dates';
 import { pluralize } from '@/utils/text';
 import { spacing } from '@/design/tokens';
 import { toast } from '@/store/useToastStore';
 import { logEvent } from '@/db/repositories/events';
+import { duplicateDocument, patchDocument, togglePinned, trashDocument } from '@/db/repositories/documents';
+import type { DocumentSummary } from '@/types/models';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -37,6 +40,13 @@ export default function HomeScreen() {
   const userName = useSettingsStore((state) => state.settings.userName);
   const [refreshing, setRefreshing] = useState(false);
   const [newNotebookOpen, setNewNotebookOpen] = useState(false);
+  const [optionsNote, setOptionsNote] = useState<DocumentSummary | null>(null);
+  const [optionsVisible, setOptionsVisible] = useState(false);
+
+  const openNoteOptions = useCallback((note: DocumentSummary) => {
+    setOptionsNote(note);
+    setOptionsVisible(true);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -144,6 +154,7 @@ export default function HomeScreen() {
                   key={note.id}
                   note={note}
                   onPress={() => router.push({ pathname: '/note/[id]', params: { id: note.id } })}
+                  onLongPress={() => openNoteOptions(note)}
                 />
               ))}
             </ScrollView>
@@ -168,6 +179,7 @@ export default function HomeScreen() {
                       key={note.id}
                       note={note}
                       onPress={() => router.push({ pathname: '/note/[id]', params: { id: note.id } })}
+                      onLongPress={() => openNoteOptions(note)}
                     />
                   ))}
                 </ScrollView>
@@ -201,6 +213,39 @@ export default function HomeScreen() {
         }}
         onClose={() => setNewNotebookOpen(false)}
       />
+
+      {optionsNote && (
+        <NoteOptionsSheet
+          visible={optionsVisible}
+          variant="noteList"
+          onClose={() => setOptionsVisible(false)}
+          note={optionsNote}
+          onColorChange={async (color) => {
+            await patchDocument(optionsNote!.id, { cardColor: color });
+            await refresh();
+            toast.show('Note colour updated');
+          }}
+          onPinToggle={async () => {
+            await togglePinned(optionsNote!.id);
+            await refresh();
+            toast.show(optionsNote!.isPinned ? 'Unpinned from top' : 'Pinned to top');
+          }}
+          onDuplicate={async () => {
+            const copy = await duplicateDocument(optionsNote!.id);
+            await refresh();
+            toast.show('Copy created');
+            router.push({ pathname: '/note/[id]', params: { id: copy.id } });
+          }}
+          onOpenEditor={() => {
+            router.push({ pathname: '/note/[id]', params: { id: optionsNote!.id } });
+          }}
+          onDelete={async () => {
+            await trashDocument(optionsNote!.id);
+            await refresh();
+            toast.show('Moved to Trash');
+          }}
+        />
+      )}
     </>
   );
 }

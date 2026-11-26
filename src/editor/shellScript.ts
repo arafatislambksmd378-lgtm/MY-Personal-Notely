@@ -78,7 +78,7 @@ export const EDITOR_SCRIPT = `
     if (state('justifyCenter')) align = 'center';
     else if (state('justifyRight')) align = 'right';
     else if (state('justifyFull')) align = 'justify';
-    var map = { h1: 'h1', h2: 'h2', h3: 'h3', blockquote: 'quote', pre: 'code', p: 'paragraph' };
+    var map = { h1: 'h1', h2: 'h2', h3: 'h3', h4: 'h4', blockquote: 'quote', pre: 'code', p: 'paragraph' };
     post({
       type: 'selection',
       info: {
