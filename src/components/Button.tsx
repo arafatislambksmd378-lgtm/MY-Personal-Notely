@@ -1,4 +1,5 @@
 /** Buttons in the reference language: 52pt tall, 16pt radius, bold labels. */
+import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { ActivityIndicator, Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 import { AppText } from './AppText';
@@ -23,7 +24,7 @@ interface ButtonProps {
   testID?: string;
 }
 
-export function Button({
+export const Button = React.memo(function Button({
   label,
   onPress,
   variant = 'primary',
@@ -39,7 +40,7 @@ export function Button({
   const colors = useColors();
   const heights: Record<Size, number> = { sm: 40, md: 48, lg: 54 };
   const palette: Record<Variant, { bg: string; border: string; text: string }> = {
-    primary: { bg: colors.primary, border: colors.primary, text: colors.scheme === 'dark' ? '#151223' : '#FFFFFF' },
+    primary: { bg: colors.primary, border: colors.primary, text: colors.onPrimary },
     secondary: { bg: colors.surface, border: colors.borderStrong, text: colors.text },
     soft: { bg: colors.primarySoft, border: 'transparent', text: colors.primary },
     ghost: { bg: 'transparent', border: 'transparent', text: colors.textSecondary },
@@ -84,7 +85,7 @@ export function Button({
       )}
     </Pressable>
   );
-}
+});
 
 const styles = StyleSheet.create({
   base: {

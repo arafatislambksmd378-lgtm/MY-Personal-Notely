@@ -1,4 +1,5 @@
 /** Compact stack-screen header: back chevron, title, optional subtitle + action. */
+import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -13,7 +14,7 @@ interface ScreenHeaderProps {
   right?: React.ReactNode;
 }
 
-export function ScreenHeader({ title, subtitle, onBack, right }: ScreenHeaderProps) {
+export const ScreenHeader = React.memo(function ScreenHeader({ title, subtitle, onBack, right }: ScreenHeaderProps) {
   const colors = useColors();
   const router = useRouter();
   return (
@@ -42,7 +43,7 @@ export function ScreenHeader({ title, subtitle, onBack, right }: ScreenHeaderPro
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   wrapper: { paddingBottom: spacing.sm },

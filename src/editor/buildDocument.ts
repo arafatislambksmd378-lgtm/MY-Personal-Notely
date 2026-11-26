@@ -82,10 +82,10 @@ export function buildEditorDocument(options: EditorDocumentOptions): string {
       <div id="drawing-canvas-wrap"><canvas id="drawing-canvas"></canvas></div>
       <div id="drawing-controls">
         <div id="drawing-colors">
-          <button class="swatch active" style="background:#151223" data-color="#151223" aria-label="Ink"></button>
-          <button class="swatch" style="background:#7C3AED" data-color="#7C3AED" aria-label="Purple"></button>
-          <button class="swatch" style="background:#2563EB" data-color="#2563EB" aria-label="Blue"></button>
-          <button class="swatch" style="background:#059669" data-color="#059669" aria-label="Green"></button>
+          <button class="swatch active" style="background:#24232B" data-color="#24232B" aria-label="Ink"></button>
+          <button class="swatch" style="background:#8950F5" data-color="#8950F5" aria-label="Purple"></button>
+          <button class="swatch" style="background:#438CEB" data-color="#438CEB" aria-label="Blue"></button>
+          <button class="swatch" style="background:#39B980" data-color="#39B980" aria-label="Green"></button>
           <button class="swatch" style="background:#EF4444" data-color="#EF4444" aria-label="Red"></button>
         </div>
         <button id="drawing-clear" class="d-btn">Clear</button>

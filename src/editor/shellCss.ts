@@ -7,12 +7,12 @@
  */
 export const EDITOR_CSS = `
   :root {
-    --canvas: #F7F6FB;
+    --canvas: #FFFFFF;
     --page: #FFFFFF;
-    --ink: #151223;
-    --muted: #6F6C80;
-    --border: #E7E3F2;
-    --accent: #7C3AED;
+    --ink: #24232B;
+    --muted: #92909D;
+    --border: #ECEAF1;
+    --accent: #8950F5;
     --paper-width: 794px;
     --paper-height: 1123px;
     --margin-top: 56px;
@@ -138,19 +138,19 @@ export const EDITOR_CSS = `
   #drawing-controls { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
   #drawing-colors { display: flex; gap: 8px; flex: 1; }
   .swatch { width: 24px; height: 24px; border-radius: 12px; border: 2px solid transparent; }
-  .swatch.active { border-color: #151223; }
+  .swatch.active { border-color: #24232B; }
   .d-btn {
     border: none; border-radius: 12px; padding: 10px 16px; font-size: 13px; font-weight: 700;
     font-family: var(--editor-font);
   }
-  #drawing-clear { background: #F1EFF8; color: #67647A; }
+  #drawing-clear { background: #F1EFF8; color: #92909D; }
   #drawing-insert { background: var(--accent); color: #FFFFFF; }
   .dark { --canvas: #100D18; --page: #181424; --ink: #F6F4FF; --muted: #AFABC2; --border: #2B2540; }
   .dark #page { box-shadow: 0 6px 24px rgba(0,0,0,0.45); }
   .dark #drawing-sheet { background: #181424; color: #F6F4FF; }
   .dark #drawing-canvas-wrap { background: #100D18; }
   .dark #editor pre { background: rgba(255,255,255,0.08); }
-  .dark #drawing-clear { background: #2A2440; color: #AFABC2; }
+  .dark #drawing-clear { background: #2A2440; color: #92909D; }
   @media print {
     body { padding: 0; background: #FFFFFF; }
     #page { box-shadow: none; border-radius: 0; max-width: none; width: 100%; min-height: 0; }
