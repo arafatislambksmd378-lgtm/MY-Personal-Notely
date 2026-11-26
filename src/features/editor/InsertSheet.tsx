@@ -1,6 +1,7 @@
 /**
- * Insert sheet — reference layout: "Image / From gallery or camera" row followed
- * by a three-column grid of insert tools.
+ * Insert sheet — compact three-column grid of insert tools.
+ * Image stays as a full-width row at the top; all other tools use
+ * compact cards in a 3-column layout matching Reference Image 2.
  */
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -125,13 +126,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md, marginTop: spacing.xs },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginTop: spacing.xs,
+  },
   tile: {
-    width: '31.2%',
-    minHeight: 104,
+    width: (100 - 2 * spacing.sm) / 3,
+    minHeight: 96,
     borderRadius: radii.lg,
     borderWidth: StyleSheet.hairlineWidth * 2,
     padding: spacing.md,
-    alignItems: 'flex-start',
+    alignItems: 'center',
+  },
+  tileIcon: {
+    marginBottom: spacing.sm,
   },
 });

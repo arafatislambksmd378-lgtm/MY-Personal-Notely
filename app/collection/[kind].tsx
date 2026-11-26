@@ -16,8 +16,18 @@ import { Button } from '@/components/Button';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { useColors } from '@/store/useSettingsStore';
 import { useLibraryStore } from '@/store/useLibraryStore';
-import { listDocumentSummaries, emptyTrash, restoreDocument, purgeDocument } from '@/db/repositories/documents';
+import {
+  listDocumentSummaries,
+  emptyTrash,
+  restoreDocument,
+  purgeDocument,
+  duplicateDocument,
+  patchDocument,
+  togglePinned,
+  trashDocument,
+} from '@/db/repositories/documents';
 import { toast } from '@/store/useToastStore';
+import { NoteOptionsSheet } from '@/features/editor/NoteOptionsSheet';
 import type { DocumentSummary } from '@/types/models';
 import { spacing } from '@/design/tokens';
 
@@ -71,6 +81,13 @@ export default function CollectionScreen() {
   const [notes, setNotes] = useState<DocumentSummary[]>([]);
   const [confirmEmpty, setConfirmEmpty] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [optionsNote, setOptionsNote] = useState<DocumentSummary | null>(null);
+  const [optionsVisible, setOptionsVisible] = useState(false);
+
+  const openNoteOptions = useCallback((note: DocumentSummary) => {
+    setOptionsNote(note);
+    setOptionsVisible(true);
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -117,7 +134,12 @@ export default function CollectionScreen() {
         contentContainerStyle={{ gap: spacing.sm, paddingBottom: spacing.xxl, flexGrow: 1 }}
         renderItem={({ item }) => (
           <View style={{ gap: spacing.xs }}>
-            <NoteCard note={item} variant="row" onPress={() => router.push({ pathname: '/note/[id]', params: { id: item.id } })} />
+            <NoteCard
+              note={item}
+              variant="row"
+              onPress={() => router.push({ pathname: '/note/[id]', params: { id: item.id } })}
+              onLongPress={() => openNoteOptions(item)}
+            />
             {kind === 'trash' ? (
               <View style={styles.actions}>
                 <Button
@@ -193,6 +215,43 @@ export default function CollectionScreen() {
         }}
         onClose={() => setConfirmEmpty(false)}
       />
+
+      {optionsNote && (
+        <NoteOptionsSheet
+          visible={optionsVisible}
+          variant="noteList"
+          onClose={() => setOptionsVisible(false)}
+          note={optionsNote}
+          onColorChange={async (color) => {
+            await patchDocument(optionsNote!.id, { cardColor: color });
+            await refreshLibrary();
+            await load();
+            toast.show('Note colour updated');
+          }}
+          onPinToggle={async () => {
+            await togglePinned(optionsNote!.id);
+            await refreshLibrary();
+            await load();
+            toast.show(optionsNote!.isPinned ? 'Unpinned from top' : 'Pinned to top');
+          }}
+          onDuplicate={async () => {
+            const copy = await duplicateDocument(optionsNote!.id);
+            await refreshLibrary();
+            await load();
+            toast.show('Copy created');
+            router.push({ pathname: '/note/[id]', params: { id: copy.id } });
+          }}
+          onOpenEditor={() => {
+            router.push({ pathname: '/note/[id]', params: { id: optionsNote!.id } });
+          }}
+          onDelete={async () => {
+            await trashDocument(optionsNote!.id);
+            await refreshLibrary();
+            await load();
+            toast.show('Moved to Trash');
+          }}
+        />
+      )}
     </Screen>
   );
 }

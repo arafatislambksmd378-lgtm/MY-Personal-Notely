@@ -14,21 +14,38 @@ import { AppText } from '@/components/AppText';
 import { NoteCard } from '@/features/home/NoteCard';
 import { EmptyState } from '@/components/EmptyState';
 import { useColors } from '@/store/useSettingsStore';
-import { searchDocuments } from '@/db/repositories/documents';
+import { useLibraryStore } from '@/store/useLibraryStore';
+import {
+  searchDocuments,
+  duplicateDocument,
+  patchDocument,
+  togglePinned,
+  trashDocument,
+} from '@/db/repositories/documents';
 import { listTags } from '@/db/repositories/tags';
 import { splitHighlight } from '@/utils/search';
+import { NoteOptionsSheet } from '@/features/editor/NoteOptionsSheet';
+import { toast } from '@/store/useToastStore';
 import type { DocumentSummary, Tag } from '@/types/models';
 import { radii, spacing } from '@/design/tokens';
 
 export default function SearchScreen() {
   const router = useRouter();
   const colors = useColors();
+  const refreshLibrary = useLibraryStore((state) => state.refresh);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<DocumentSummary[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [searching, setSearching] = useState(false);
+  const [optionsNote, setOptionsNote] = useState<DocumentSummary | null>(null);
+  const [optionsVisible, setOptionsVisible] = useState(false);
   const requestId = useRef(0);
+
+  const openNoteOptions = useCallback((note: DocumentSummary) => {
+    setOptionsNote(note);
+    setOptionsVisible(true);
+  }, []);
 
   useEffect(() => {
     void listTags().then(setTags).catch(() => undefined);
@@ -104,6 +121,7 @@ export default function SearchScreen() {
               note={item}
               variant="row"
               onPress={() => router.push({ pathname: '/note/[id]', params: { id: item.id } })}
+              onLongPress={() => openNoteOptions(item)}
             />
             {query.trim() ? (
               <AppText variant="label" tone="muted" numberOfLines={1} style={styles.snippet}>
@@ -153,6 +171,39 @@ export default function SearchScreen() {
           )
         }
       />
+
+      {optionsNote && (
+        <NoteOptionsSheet
+          visible={optionsVisible}
+          variant="noteList"
+          onClose={() => setOptionsVisible(false)}
+          note={optionsNote}
+          onColorChange={async (color) => {
+            await patchDocument(optionsNote!.id, { cardColor: color });
+            await refreshLibrary();
+            toast.show('Note colour updated');
+          }}
+          onPinToggle={async () => {
+            await togglePinned(optionsNote!.id);
+            await refreshLibrary();
+            toast.show(optionsNote!.isPinned ? 'Unpinned from top' : 'Pinned to top');
+          }}
+          onDuplicate={async () => {
+            const copy = await duplicateDocument(optionsNote!.id);
+            await refreshLibrary();
+            toast.show('Copy created');
+            router.push({ pathname: '/note/[id]', params: { id: copy.id } });
+          }}
+          onOpenEditor={() => {
+            router.push({ pathname: '/note/[id]', params: { id: optionsNote!.id } });
+          }}
+          onDelete={async () => {
+            await trashDocument(optionsNote!.id);
+            await refreshLibrary();
+            toast.show('Moved to Trash');
+          }}
+        />
+      )}
     </Screen>
   );
 }

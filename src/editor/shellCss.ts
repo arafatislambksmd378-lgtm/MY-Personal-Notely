@@ -145,12 +145,12 @@ export const EDITOR_CSS = `
   }
   #drawing-clear { background: #F1EFF8; color: #92909D; }
   #drawing-insert { background: var(--accent); color: #FFFFFF; }
-  .dark { --canvas: #100D18; --page: #181424; --ink: #F6F4FF; --muted: #AFABC2; --border: #2B2540; }
-  .dark #page { box-shadow: 0 6px 24px rgba(0,0,0,0.45); }
-  .dark #drawing-sheet { background: #181424; color: #F6F4FF; }
-  .dark #drawing-canvas-wrap { background: #100D18; }
+  .dark { --canvas: #121018; --page: #1B1824; --ink: #F5F2FA; --muted: #B7B0C5; --border: #383145; --accent: #A77BFF; }
+  .dark #page { box-shadow: 0 6px 24px rgba(0,0,0,0.55); }
+  .dark #drawing-sheet { background: #1B1824; color: #F5F2FA; }
+  .dark #drawing-canvas-wrap { background: #121018; border-color: #383145; }
   .dark #editor pre { background: rgba(255,255,255,0.08); }
-  .dark #drawing-clear { background: #2A2440; color: #92909D; }
+  .dark #drawing-clear { background: #292438; color: #B7B0C5; }
   @media print {
     body { padding: 0; background: #FFFFFF; }
     #page { box-shadow: none; border-radius: 0; max-width: none; width: 100%; min-height: 0; }

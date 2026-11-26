@@ -14,6 +14,8 @@ export type TabIconName =
   | 'home-outline'
   | 'albums'
   | 'albums-outline'
+  | 'code'
+  | 'code-outline'
   | 'settings'
   | 'settings-outline';
 
@@ -29,6 +31,7 @@ export interface TabRoute {
 export const TAB_ROUTES: TabRoute[] = [
   { name: 'index', href: '/', label: 'Home', icon: 'home', iconOutline: 'home-outline' },
   { name: 'notebooks', href: '/notebooks', label: 'Notebooks', icon: 'albums', iconOutline: 'albums-outline' },
+  { name: 'code-workspace', href: '/code-workspace', label: 'Code Workspace', icon: 'code', iconOutline: 'code-outline' },
   { name: 'settings', href: '/settings', label: 'Settings', icon: 'settings', iconOutline: 'settings-outline' },
 ];
 

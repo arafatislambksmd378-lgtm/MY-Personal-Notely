@@ -14,6 +14,7 @@ const BLOCK_LABELS: Record<BlockStyle, string> = {
   h1: 'Heading 1',
   h2: 'Heading 2',
   h3: 'Heading 3',
+  h4: 'Heading 4',
   quote: 'Quote',
   code: 'Code',
 };

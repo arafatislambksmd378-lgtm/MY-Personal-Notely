@@ -38,6 +38,7 @@ import {
 import { ShareExportSheet } from '@/features/editor/ShareExportSheet';
 import { TagsSheet } from '@/features/editor/TagsSheet';
 import { ScanSheet } from '@/features/editor/ScanSheet';
+import { TextStyleSelector } from '@/components/TextStyleSelector';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
@@ -316,7 +317,9 @@ export default function NoteEditorScreen() {
           openSheet('table');
           break;
         case 'drawing':
-          send({ type: 'open-drawing' });
+          if (id) {
+            router.push({ pathname: '/drawing/[noteId]', params: { noteId: id } });
+          }
           break;
         case 'chart':
           openSheet('chart');
@@ -495,15 +498,21 @@ export default function NoteEditorScreen() {
       />
 
       {!collapsed ? (
-        <FormatToolbar
-          selection={selection}
-          onCommand={(command) => send({ type: 'exec', command })}
-          onAlign={(align) => send({ type: 'align', value: align })}
-          onOpenStyleSheet={() => openSheet('style')}
-          onOpenColorSheet={() => openSheet('style')}
-          onOpenLinkSheet={() => openSheet('link')}
-          onSmallText={() => openSheet('style')}
-        />
+        <>
+          <FormatToolbar
+            selection={selection}
+            onCommand={(command) => send({ type: 'exec', command })}
+            onAlign={(align) => send({ type: 'align', value: align })}
+            onOpenStyleSheet={() => openSheet('style')}
+            onOpenColorSheet={() => openSheet('style')}
+            onOpenLinkSheet={() => openSheet('link')}
+            onSmallText={() => openSheet('style')}
+          />
+          <TextStyleSelector
+            currentBlock={selection.block}
+            onBlock={(block) => send({ type: 'block', value: block })}
+          />
+        </>
       ) : null}
 
       <RichTextEditor
