@@ -1,1 +1,1 @@
-    topResumedActivity=ActivityRecord{68def76 u0 com.notely.app/.MainActivity t11}
+    topResumedActivity=ActivityRecord{af0f0ad u0 com.notely.app/.MainActivity t11}
