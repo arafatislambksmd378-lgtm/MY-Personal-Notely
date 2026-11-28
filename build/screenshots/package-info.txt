@@ -1,5 +1,5 @@
     versionCode=1 minSdk=24 targetSdk=36
     versionName=1.0.0
-      firstInstallTime=2026-11-28 06:23:37
+      firstInstallTime=2026-11-28 08:31:19
 14
 Physical size: 1080x2400
