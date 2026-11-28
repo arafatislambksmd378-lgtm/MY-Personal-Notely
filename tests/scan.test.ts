@@ -1,13 +1,24 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import {
+  buildScanHtml,
+  captureScanPage,
+  collectScanPages,
+  recognisePage,
+  scannedPageCountText,
+  type ScanPage,
+} from '@/services/scan';
+import { ocrAvailable, recognizePageText, tidyOcrText } from '@/services/ocr';
+import { startDictation, voiceInputStatus } from '@/services/voice';
+
 const state = vi.hoisted(() => ({
   platform: 'android' as 'android' | 'web' | 'ios',
   mlkitSupported: true,
   ocrShouldThrow: false,
   ocrText: 'Invoice 42\nTotal 99.00\n\nThank you',
   permissionGranted: true,
-  started: [] as Array<Record<string, unknown>>,
-  listeners: new Map<string, Array<(event: unknown) => void>>(),
+  started: [] as Record<string, unknown>[],
+  listeners: new Map<string, ((event: unknown) => void)[]>(),
   stopped: 0,
 }));
 
@@ -57,17 +68,6 @@ vi.mock('expo-speech-recognition', () => ({
   },
 }));
 
-import {
-  buildScanHtml,
-  captureScanPage,
-  collectScanPages,
-  recognisePage,
-  scannedPageCountText,
-  type ScanPage,
-} from '@/services/scan';
-import { ocrAvailable, recognizePageText, tidyOcrText } from '@/services/ocr';
-import { startDictation, voiceInputStatus } from '@/services/voice';
-
 const PAGE: ScanPage = { dataUri: 'data:image/jpeg;base64,AAA', width: 1200, height: 1600 };
 
 function emit(event: string, payload: unknown) {
@@ -85,7 +85,7 @@ describe('scan pipeline', () => {
   });
 
   it('collects pages until cancelled and reports progress', async () => {
-    const queue: Array<{ dataUri: string; width: number; height: number; byteSize: number } | null> = [
+    const queue: ({ dataUri: string; width: number; height: number; byteSize: number } | null)[] = [
       { ...PAGE, byteSize: 3 },
       { ...PAGE, byteSize: 3 },
       null,
@@ -190,7 +190,7 @@ describe('voice typing', () => {
     state.started.length = 0;
     state.listeners.clear();
     state.stopped = 0;
-    const transcripts: Array<{ text: string; final: boolean }> = [];
+    const transcripts: { text: string; final: boolean }[] = [];
     const errors: string[] = [];
 
     const session = startDictation(

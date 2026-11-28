@@ -1,18 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const secrets = new Map<string, string>();
-
-vi.mock('@/services/secureStorage', () => ({
-  setSecret: async (key: string, value: string) => void secrets.set(key, value),
-  getSecret: async (key: string) => secrets.get(key) ?? null,
-  deleteSecret: async (key: string) => void secrets.delete(key),
-}));
-
-vi.mock('react-native', () => ({
-  Platform: { OS: 'android', select: (options: Record<string, unknown>) => options.android ?? options.default },
-  Appearance: { getColorScheme: () => 'light' },
-}));
-
 import { createTestDatabase, type TestDatabase } from './helpers/testDb';
 import { seedIfEmpty } from '@/db/seed';
 import { getDocument, listDocuments, saveDocumentContent } from '@/db/repositories/documents';
@@ -29,6 +16,19 @@ import {
   type SyncClient,
   type SyncConfig,
 } from '@/services/supabase';
+
+const secrets = new Map<string, string>();
+
+vi.mock('@/services/secureStorage', () => ({
+  setSecret: async (key: string, value: string) => void secrets.set(key, value),
+  getSecret: async (key: string) => secrets.get(key) ?? null,
+  deleteSecret: async (key: string) => void secrets.delete(key),
+}));
+
+vi.mock('react-native', () => ({
+  Platform: { OS: 'android', select: (options: Record<string, unknown>) => options.android ?? options.default },
+  Appearance: { getColorScheme: () => 'light' },
+}));
 
 let ctx: TestDatabase;
 
@@ -123,7 +123,7 @@ describe('sync configuration', () => {
 
 describe('Supabase client', () => {
   function mockFetch(response: { ok?: boolean; status?: number; payload?: unknown }) {
-    const calls: Array<{ url: string; init: RequestInit }> = [];
+    const calls: { url: string; init: RequestInit }[] = [];
     const impl = (async (url: string, init: RequestInit = {}) => {
       calls.push({ url: String(url), init });
       return {

@@ -20,6 +20,8 @@
  */
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
+import { createSyncClient, SupabaseError, type RemoteDocument } from '@/services/supabase';
+
 vi.mock('@/services/secureStorage', () => ({
   setSecret: async () => undefined,
   getSecret: async () => null,
@@ -33,8 +35,6 @@ vi.mock('react-native', () => ({
   },
   Appearance: { getColorScheme: () => 'light' },
 }));
-
-import { createSyncClient, SupabaseError, type RemoteDocument } from '@/services/supabase';
 
 const LIVE = process.env.NOTELY_LIVE_SYNC === '1';
 const URL_VALUE = process.env.NOTELY_SUPABASE_URL ?? '';

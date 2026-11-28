@@ -30,8 +30,7 @@ import { useColors } from '@/store/useSettingsStore';
 import { useLibraryStore } from '@/store/useLibraryStore';
 import { saveDocumentContent } from '@/db/repositories/documents';
 import { toast } from '@/store/useToastStore';
-import { spacing } from '@/design/tokens';
-import { radii } from '@/design/tokens';
+import { spacing , radii } from '@/design/tokens';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 

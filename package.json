@@ -72,5 +72,10 @@
     "sql.js": "^1.17.0",
     "typescript": "~6.0.3",
     "vitest": "^5.1.1"
+  },
+  "overrides": {
+    "@expo/fingerprint": {
+      "minimatch": "11.0.1"
+    }
   }
 }
