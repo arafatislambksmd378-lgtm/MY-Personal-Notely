@@ -111,7 +111,7 @@ function startNativeDictation(
 ): DictationSession | null {
   if (!nativeAvailable()) return null;
 
-  const subscriptions: Array<{ remove: () => void }> = [];
+  const subscriptions: { remove: () => void }[] = [];
   let stopped = false;
 
   const cleanup = () => {

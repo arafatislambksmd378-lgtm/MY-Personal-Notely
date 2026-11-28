@@ -1,5 +1,9 @@
 /** Store-level smoke tests: the library and settings stores hydrate from SQLite. */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { createTestDatabase, type TestDatabase } from './helpers/testDb';
+import { seedIfEmpty } from '@/db/seed';
+import { useLibraryStore } from '@/store/useLibraryStore';
+import { useSettingsStore } from '@/store/useSettingsStore';
 
 // The stores only need `Appearance` from React Native; the real entry point is
 // Flow-typed and cannot be parsed by Node, so it is stubbed for this suite.
@@ -7,10 +11,6 @@ vi.mock('react-native', () => ({
   Appearance: { getColorScheme: () => 'light', addChangeListener: () => ({ remove: () => undefined }) },
   Platform: { OS: 'android', select: (options: Record<string, unknown>) => options.android ?? options.default },
 }));
-import { createTestDatabase, type TestDatabase } from './helpers/testDb';
-import { seedIfEmpty } from '@/db/seed';
-import { useLibraryStore } from '@/store/useLibraryStore';
-import { useSettingsStore } from '@/store/useSettingsStore';
 
 let ctx: TestDatabase;
 

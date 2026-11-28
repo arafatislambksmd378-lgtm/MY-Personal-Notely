@@ -13,19 +13,9 @@ import { resolve } from 'node:path';
 import { TAB_ROUTES, activeTabIndex, shouldNavigateToTab } from '@/utils/tabRoutes';
 
 describe('tab routes', () => {
-  it('exposes the four tabs in order', () => {
-    expect(TAB_ROUTES.map((route) => route.label)).toEqual([
-      'Home',
-      'Notebooks',
-      'Code Workspace',
-      'Settings',
-    ]);
-    expect(TAB_ROUTES.map((route) => route.href)).toEqual([
-      '/',
-      '/notebooks',
-      '/code-workspace',
-      '/settings',
-    ]);
+  it('exposes only Home, Notebook, and Setting tabs in order', () => {
+    expect(TAB_ROUTES.map((route) => route.label)).toEqual(['Home', 'Notebook', 'Setting']);
+    expect(TAB_ROUTES.map((route) => route.href)).toEqual(['/', '/notebooks', '/settings']);
   });
 
   it('has a filled and an outline icon for each tab', () => {
@@ -45,23 +35,20 @@ describe('tab routes', () => {
   it('keeps the parent tab lit on nested screens', () => {
     expect(activeTabIndex('/notebooks')).toBe(1);
     expect(activeTabIndex('/notebook/notebook-1')).toBe(0);
-    expect(activeTabIndex('/code-workspace')).toBe(2);
-    expect(activeTabIndex('/code-workspace/file/xyz')).toBe(2);
-    expect(activeTabIndex('/settings')).toBe(3);
-    expect(activeTabIndex('/settings/backup')).toBe(3);
-    expect(activeTabIndex('/settings/cloud')).toBe(3);
+    expect(activeTabIndex('/settings')).toBe(2);
+    expect(activeTabIndex('/settings/backup')).toBe(2);
+    expect(activeTabIndex('/settings/cloud')).toBe(2);
   });
 
   it('ignores query strings and trailing slashes', () => {
     expect(activeTabIndex('/notebooks?filter=pinned')).toBe(1);
-    expect(activeTabIndex('/settings/')).toBe(3);
+    expect(activeTabIndex('/settings/')).toBe(2);
   });
 
   it('only navigates when the tapped tab is not already active', () => {
     expect(shouldNavigateToTab(1, '/')).toBe(true);
     expect(shouldNavigateToTab(1, '/notebooks')).toBe(false);
-    expect(shouldNavigateToTab(2, '/code-workspace')).toBe(false);
-    expect(shouldNavigateToTab(3, '/settings/cloud')).toBe(false);
+    expect(shouldNavigateToTab(2, '/settings/cloud')).toBe(false);
     expect(shouldNavigateToTab(0, '/settings')).toBe(true);
   });
 });

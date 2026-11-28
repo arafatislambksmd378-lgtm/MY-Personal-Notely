@@ -10,9 +10,8 @@ export default function TabsLayout() {
   return (
     <Tabs screenOptions={{ headerShown: false }} tabBar={() => <TabBar />}>
       <Tabs.Screen name="index" options={{ title: 'Home' }} />
-      <Tabs.Screen name="notebooks" options={{ title: 'Notebooks' }} />
-      <Tabs.Screen name="code-workspace" options={{ title: 'Code Workspace' }} />
-      <Tabs.Screen name="settings" options={{ title: 'Settings' }} />
+      <Tabs.Screen name="notebooks" options={{ title: 'Notebook' }} />
+      <Tabs.Screen name="settings" options={{ title: 'Setting' }} />
     </Tabs>
   );
 }
